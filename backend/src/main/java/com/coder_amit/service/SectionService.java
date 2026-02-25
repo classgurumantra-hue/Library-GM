@@ -1,0 +1,57 @@
+package com.coder_amit.service;
+
+import com.coder_amit.model.Centre;
+import com.coder_amit.model.Section;
+import com.coder_amit.repository.CentreRepository;
+import com.coder_amit.repository.SectionRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class SectionService {
+    private final SectionRepository sectionRepository;
+    private final CentreRepository centreRepository;
+
+    public SectionService(SectionRepository sectionRepository, CentreRepository centreRepository) {
+        this.sectionRepository = sectionRepository;
+        this.centreRepository = centreRepository;
+    }
+
+    public Section createSection(Section section, Long centreId) {
+        Centre centre = centreRepository.findById(centreId)
+                .orElseThrow(() -> new RuntimeException("Centre not found"));
+        section.setCentre(centre);
+        return sectionRepository.save(section);
+    }
+
+    public List<Section> getAllSections() {
+        return sectionRepository.findAll();
+    }
+
+    public Section getSectionById(Long id) {
+        return sectionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Section not found"));
+    }
+
+    public Section updateSection(Long id, Section sectionDetails, Long centreId) {
+        Section section = getSectionById(id);
+        Centre centre = centreRepository.findById(centreId)
+                .orElseThrow(() -> new RuntimeException("Centre not found"));
+
+        section.setName(sectionDetails.getName());
+        section.setStartSeatNumber(sectionDetails.getStartSeatNumber());
+        section.setEndSeatNumber(sectionDetails.getEndSeatNumber());
+        section.setNumberOfRows(sectionDetails.getNumberOfRows());
+        section.setNumberOfColumns(sectionDetails.getNumberOfColumns());
+        section.setActive(sectionDetails.getActive());
+        section.setStartDate(sectionDetails.getStartDate());
+        section.setCentre(centre);
+
+        return sectionRepository.save(section);
+    }
+
+    public void deleteSection(Long id) {
+        sectionRepository.deleteById(id);
+    }
+}
