@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Choose Section</title>
+  <link rel="stylesheet" href="assets/css/sections.css">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+
+<div id="navbar"></div>
+
+<div class="container">
+  <h2>Choose Your Section</h2>
+  <p class="subtitle">Select your preferred hall</p>
+
+  <div class="card-grid">
+
+    <div class="card">
+      <!-- THUMBNAIL ADDED -->
+      <img src="https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=800&q=80" class="thumb">
+      <h3>General Hall</h3>
+      <p>Start Seat: A1</p>
+      <button onclick="goShift('Morning')">Choose Shift</button>
+    </div>
+
+    <div class="card premium">
+      <!-- THUMBNAIL ADDED -->
+      <img src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=800&q=80" class="thumb">
+      <h3>Premium Hall</h3>
+      <p>Start Seat: P1</p>
+      <button onclick="goShift('Evening')">Choose Shift</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+fetch("components/navbar.html")
+  .then(res => res.text())
+  .then(data => {
+    document.getElementById("navbar").innerHTML = data;
+  });
+</script>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

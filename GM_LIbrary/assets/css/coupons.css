@@ -1,0 +1,94 @@
+.coupon-page {
+  background: #f4f7fb;
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+
+.page-title {
+  text-align: center;
+  color: #0b2c5d;
+  margin-bottom: 30px;
+}
+
+.coupon-container {
+  max-width: 900px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.coupon-card {
+  background: white;
+  border-radius: 18px;
+  padding: 26px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+  transition: 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.coupon-card::before {
+  content: "";
+  width: 6px;
+  height: 100%;
+  background: linear-gradient(180deg,#0b2c5d,#1e60c1);
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.coupon-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 45px rgba(0,0,0,0.12);
+}
+
+.coupon-left h3 {
+  margin: 0;
+  font-size: 20px;
+  color: #0b2c5d;
+}
+
+.coupon-left p {
+  margin: 6px 0;
+  color: #475569;
+  font-size: 14px;
+}
+
+.coupon-right button {
+  background: #ff6b00;
+  border: none;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+.coupon-right button:hover {
+  background: #e45d00;
+}
+
+/* --------- MOBILE --------- */
+
+@media(max-width:768px){
+
+  .coupon-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 20px;
+  }
+
+  .coupon-right {
+    align-self: flex-end;
+  }
+
+  .coupon-left h3 {
+    font-size: 18px;
+  }
+}

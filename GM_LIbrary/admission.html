@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admission | GM Library</title>
+<link rel="stylesheet" href="assets/css/admission.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/main.css">
+<link rel="stylesheet" href="assets/css/admission.css">
+<link rel="stylesheet" href="assets/css/responsive.css">
+
+</head>
+
+<body class="admission-page">
+  <div id="navbar"></div>
+
+<h2>Choose Your Admission Type</h2>
+<p class="sub">Start your journey with GM Library</p>
+
+<div class="admission-grid">
+
+  <div class="admission-card" onclick="goLibrary()">
+    <i class="bi bi-building"></i>
+    <h3>Library</h3>
+    <p>Seat based self study library</p>
+    <span>Continue →</span>
+  </div>
+
+  <div class="admission-card course" onclick="goCourse()">
+    <i class="bi bi-mortarboard"></i>
+    <h3>Library with Courses</h3>
+    <p>Study + Mentorship + Courses</p>
+    <span>Explore →</span>
+  </div>
+
+</div>
+
+<script>
+fetch("components/navbar.html")
+  .then(res => res.text())
+  .then(data => {
+    document.getElementById("navbar").innerHTML = data;
+  });
+</script>
+
+<script src="assets/js/admission.js"></script>
+</body>
+</html>

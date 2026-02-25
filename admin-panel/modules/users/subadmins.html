@@ -1,0 +1,52 @@
+<div class="card p-4 mx-auto" style="max-width: 800px;">
+    <h4 class="fw-bold mb-4">Add New Subadmin</h4>
+    <form id="subadminForm">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Full Name</label>
+                <input type="text" class="form-control" placeholder="Enter Name" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Mobile Number</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="mobileInput" placeholder="98XXXXXXXX">
+                    <button class="btn btn-dark" type="button" onclick="handleOTPFlow()">Verify OTP</button>
+                </div>
+                <div id="otpDropdown" class="otp-box mt-2">
+                    <div class="p-3 border rounded bg-light">
+                        <p class="small text-muted mb-2">Check popup for Demo OTP</p>
+                        <input type="text" id="enteredOtp" class="form-control mb-2" placeholder="Enter 4-digit OTP">
+                        <button type="button" class="btn btn-success btn-sm w-100" onclick="validateOTP()">Verify Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <label class="form-label fw-semibold">Select Centres (Multi-select)</label>
+                <select class="form-select" multiple>
+                    <option>Centre A - Mumbai</option>
+                    <option>Centre B - Delhi</option>
+                    <option>Centre C - Indore</option>
+                </select>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    function handleOTPFlow() {
+        alert("DEMO OTP: 2026"); // Production style demo popup
+        document.getElementById('otpDropdown').style.display = 'block';
+    }
+
+    function validateOTP() {
+        const otp = document.getElementById('enteredOtp').value;
+        if(otp === "2026") {
+            alert("✅ Verified Successfully!");
+            document.getElementById('otpDropdown').style.display = 'none';
+            document.getElementById('mobileInput').classList.add('is-valid');
+            document.getElementById('mobileInput').disabled = true;
+        } else {
+            alert("❌ Invalid OTP. Try again.");
+        }
+    }
+</script>

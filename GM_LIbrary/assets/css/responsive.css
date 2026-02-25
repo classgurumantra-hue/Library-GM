@@ -1,0 +1,273 @@
+@media (max-width: 768px) {
+
+  body {
+    overflow-x: hidden;
+  }
+
+  /* ===== HERO SLIDER ===== */
+  .hero-slider {
+    height: 180px;
+  }
+
+  .hero-slide {
+    height: 180px;
+    object-fit: cover;
+  }
+
+  /* ===== MARQUEE ===== */
+  .gm-marquee {
+    font-size: 13px;
+    padding: 6px;
+  }
+
+  /* ===== ADMISSION BUTTON ===== */
+  .btn-gm {
+    width: 90%;
+    display: block;
+    margin: auto;
+    font-size: 16px;
+  }
+
+  /* ===== NOTICE BOARD ===== */
+  .gm-notice {
+    padding: 15px;
+    font-size: 14px;
+  }
+
+  /* ===== FEATURE BUTTONS ===== */
+  .feature-buttons {
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 15px;
+  }
+
+  .feature-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* ===== LOCKER & CANTEEN ===== */
+  .gm-services {
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .gm-service-card {
+    width: 100%;
+    min-height: 140px;
+    margin-bottom: 15px;
+  }
+
+  /* ===== REFERRAL ===== */
+  .gm-referral {
+    padding: 20px;
+    text-align: center;
+  }
+
+  /* ===== FOOTER ===== */
+  .gm-footer {
+    text-align: center;
+  }
+
+  .gm-footer .row {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* ================= NAVBAR MOBILE ================= */
+
+  .gm-hamburger {
+    display: block;
+    font-size: 28px;
+    cursor: pointer;
+    position: absolute;
+    right: 20px;
+    top: 18px;
+    z-index: 10000;
+  }
+
+  .gm-nav-menu {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 75%;
+    height: 100%;
+    background: #0b2c5d;
+    display: flex;
+    flex-direction: column;
+    padding-top: 80px;
+    transition: 0.3s ease;
+    z-index: 9999;
+  }
+
+  .gm-nav-menu li {
+    margin: 15px 0;
+    padding-left: 25px;
+  }
+
+  .gm-nav-menu li a {
+    color: white;
+    font-size: 18px;
+    text-decoration: none;
+  }
+
+  .gm-nav-menu.show {
+    left: 0;
+  }
+
+  .dropdown-menu {
+    position: static;
+    background: transparent;
+    padding-left: 15px;
+  }
+}
+
+  /* ================= Wallet ================= */
+@media (max-width: 768px) {
+  .gm-wallet-box {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .gm-wallet-modern {
+    padding: 40px 10px;
+  }
+
+  .gm-wallet-item {
+    padding: 30px 20px;
+    border-radius: 18px;
+  }
+
+  .gm-wallet-item h3 {
+    font-size: 18px;
+  }
+
+  .balance-box .coins {
+    font-size: 42px;
+  }
+
+  .share-box button {
+    width: 100%;
+    text-align: center;
+  }
+}
+@media (max-width: 768px) {
+  .hero-slider {
+    height: 300px;   /* pehle 180 tha */
+  }
+
+  .hero-slide {
+    height: 300px;
+    object-fit: cover;
+  }
+}
+@media(max-width:768px){
+  .footer-social{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+
+  body { overflow-x: hidden; }
+
+  .hero-slider {
+    height: 300px;
+  }
+
+  .hero-slide {
+    height: 300px;
+    object-fit: cover;
+  }
+
+  /* NAVBAR MOBILE */
+  .gm-hamburger {
+    display: block;
+    font-size: 28px;
+    cursor: pointer;
+    position: absolute;
+    right: 20px;
+    top: 18px;
+    z-index: 10000;
+  }
+
+  .gm-nav-menu {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 75%;
+    height: 100%;
+    background: #0b2c5d;
+    display: flex;
+    flex-direction: column;
+    padding-top: 80px;
+    transition: 0.3s ease;
+    z-index: 9999;
+  }
+
+  .gm-nav-menu.show {
+    left: 0;
+  }
+
+  .gm-nav-menu li {
+    margin: 15px 0;
+    padding-left: 25px;
+  }
+
+  .gm-nav-menu li a {
+    color: white;
+    font-size: 18px;
+  }
+
+  .dropdown-menu {
+    position: static;
+    background: transparent;
+    padding-left: 15px;
+  }
+
+  .footer-social{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+  }
+}
+@media (max-width: 768px) {
+
+  .page-title {
+    font-size: 20px;
+  }
+
+  .card-container {
+    padding: 15px;
+  }
+
+  .booking-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 20px;
+  }
+
+  .booking-left h3 {
+    font-size: 18px;
+  }
+
+  .booking-left p {
+    font-size: 13px;
+  }
+
+  .booking-right {
+    align-self: flex-end;
+  }
+
+  .status {
+    font-size: 12px;
+    padding: 6px 14px;
+  }
+}

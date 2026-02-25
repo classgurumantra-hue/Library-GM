@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Coupons</title>
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/coupons.css">
+   <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+
+<div id="navbar"></div>
+
+<div class="coupon-page">
+
+  <h2 class="page-title">🎟 My Coupons</h2>
+
+  <div class="coupon-container" id="couponContainer">
+    <!-- JS se cards aayenge -->
+  </div>
+
+</div>
+
+<script>
+fetch("components/navbar.html")
+  .then(res => res.text())
+  .then(data => {
+    document.getElementById("navbar").innerHTML = data;
+  });
+</script>
+
+<script src="assets/js/navbar.js"></script>
+<script src="assets/js/coupons.js"></script>
+
+
+</body>
+</html>

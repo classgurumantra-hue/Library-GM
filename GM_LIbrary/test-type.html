@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Select Test Type</title>
+  <link rel="stylesheet" href="assets/css/test.css">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+
+</head>
+<body>
+<div id="navbar"></div>
+
+<div class="test-container">
+  <h2>Select Test Type</h2>
+
+  <div class="test-grid">
+
+    <div class="test-card mcq">
+      <h2>MCQ Test</h2>
+      <p>Objective based questions</p>
+      <button>Start MCQ</button>
+    </div>
+
+    <div class="test-card desc">
+      <h2>Descriptive Test</h2>
+      <p>Write answers like real exam</p>
+      <button>Start Descriptive</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+fetch("components/navbar.html")
+  .then(res => res.text())
+  .then(data => {
+    document.getElementById("navbar").innerHTML = data;
+  });
+</script>
+
+</body>
+</html>

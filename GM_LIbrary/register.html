@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Signup | GM Library</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link href="assets/css/register.css" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/main.css">
+<link rel="stylesheet" href="assets/css/responsive.css">
+
+</head>
+
+<body class="auth-bg">
+<div id="navbar"></div>
+
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+<div class="card auth-card p-4 shadow-lg">
+
+<h4 class="text-center mb-3">Register with GM Library</h4>
+
+<input class="form-control mb-2" placeholder="Full Name">
+<input class="form-control mb-2" placeholder="Mobile Number">
+
+<div class="d-flex gap-2">
+  <input class="form-control" id="email" placeholder="Email">
+  <button class="btn btn-primary" onclick="sendOTP()">Send OTP</button>
+</div>
+
+<div id="otpBox" class="otp-box mt-2">
+  <input class="form-control mb-2" id="otpInput" placeholder="Enter OTP">
+  <button class="btn btn-success w-100" onclick="verifyOTP()">Verify OTP</button>
+</div>
+
+<input class="form-control mt-2" type="password" placeholder="Create Password">
+<input class="form-control mt-2" type="password" placeholder="Confirm Password">
+
+<select class="form-control mt-2">
+<option selected disabled>Gender</option>
+<option>Male</option>
+<option>Female</option>
+<option>Other</option>
+</select>
+
+<input class="form-control mt-2" placeholder="Referral Code (optional)">
+
+<div class="form-check mt-2">
+  <input class="form-check-input" type="checkbox" id="tc" disabled>
+  <label class="form-check-label">
+    Accept terms & Conditions
+    <a href="#" data-bs-toggle="modal" data-bs-target="#tcModal">
+      Read
+    </a>
+  </label>
+</div>
+
+
+<button class="btn btn-primary w-100 mt-3">Create Account</button>
+
+<p class="text-center mt-3">
+Already have account? <a href="login.html">Login</a>
+</p>
+
+</div>
+</div>
+
+<!-- Terms Modal -->
+<div class="modal fade" id="tcModal">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content" style="border-radius:15px">
+
+      <div class="modal-header">
+        <h5 class="modal-title">GM Library - Terms & Conditions</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body" style="max-height:60vh; overflow-y:auto">
+        <p>Welcome to GM Library.</p>
+        <p>
+          1. Seat booking is non-refundable.<br>
+          2. One account per student.<br>
+          3. Misuse leads to ban.<br>
+          4. Rules must be followed.<br>
+          5. Admin decision final.
+        </p>
+        <p>This is demo text.</p>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-success" id="readBtn">
+          I have read
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<script>
+fetch("components/navbar.html")
+  .then(res => res.text())
+  .then(data => {
+    document.getElementById("navbar").innerHTML = data;
+  });
+</script>
+
+<script src="assets/js/auth.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+document.getElementById("readBtn").addEventListener("click", function(){
+  document.getElementById("tc").disabled = false;
+  document.getElementById("tc").checked = true;
+  bootstrap.Modal.getInstance(document.getElementById('tcModal')).hide();
+});
+</script>
+
+</body>
+</html>

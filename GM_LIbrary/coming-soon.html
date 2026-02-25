@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Coming Soon | GM Library</title>
+<link rel="stylesheet" href="assets/css/admission.css">
+<link rel="stylesheet" href="assets/css/main.css">
+<link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+
+<body class="admission-page">
+<div id="navbar"></div>
+
+<h1>Library with Courses</h1>
+<p class="sub">Something powerful is coming 🚀</p>
+
+<div class="admission-card course">
+  <h2>Coming Soon</h2>
+  <p>
+    Mentorship Programs <br>
+    Online + Offline Courses <br>
+    Expert Faculty <br>
+    Smart Study Plans
+  </p>
+  <span>Launching Shortly</span>
+</div>
+
+<script>
+fetch("components/navbar.html")
+  .then(res => res.text())
+  .then(data => {
+    document.getElementById("navbar").innerHTML = data;
+  });
+</script>
+
+</body>
+</html>

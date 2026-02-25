@@ -1,0 +1,83 @@
+/* NAVBAR FIX */
+.navbar{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  z-index:9999;
+  background:white;   /* important */
+}
+
+/* MAIN PAGE */
+.admission-page{
+  min-height:100vh;
+  background:linear-gradient(135deg,#001b3a,#0055aa);
+  color:white;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  padding-top:90px;   /* navbar height */
+  text-align:center;
+}
+
+/* TEXT */
+.sub{
+  opacity:.8;
+  margin-bottom:40px;
+}
+
+/* CARDS GRID */
+.admission-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:40px;
+}
+
+/* CARD */
+.admission-card{
+  background:white;
+  color:#001b3a;
+  padding:50px;
+  border-radius:20px;
+  width:280px;
+  cursor:pointer;
+  transition:.4s;
+  box-shadow:0 20px 40px rgba(0,0,0,.25);
+}
+
+.admission-card i{
+  font-size:48px;
+  color:#0055aa;
+}
+
+.admission-card span{
+  color:#0055aa;
+  font-weight:600;
+}
+
+.admission-card:hover{
+  transform:translateY(-10px) scale(1.02);
+}
+
+/* COURSE CARD */
+.course{
+  background:linear-gradient(135deg,#ff6a00,#ffb347);
+  color:white;
+}
+
+.course i,
+.course span{
+  color:white;
+}
+
+/* MOBILE FIX */
+@media(max-width:768px){
+  .admission-grid{
+    grid-template-columns:1fr;
+  }
+
+  .admission-page{
+    padding-top:80px;
+  }
+}

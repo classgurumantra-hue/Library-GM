@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GM Library | Payment</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="assets/css/payment.css">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+
+</head>
+<body>
+  <div id="navbar"></div>
+
+<div class="payment-wrapper">
+
+  <h2>Complete Your Payment</h2>
+  <p class="sub">Seat reserved for A1 (Evening Shift)</p>
+
+  <div class="pay-card">
+
+    <!-- Booking Summary -->
+    <h5>Booking Details</h5>
+    <div class="row">
+      <span>Zone</span><span>North</span>
+      <span>Centre</span><span>GM Indore</span>
+      <span>Time</span><span>5PM - 10PM</span>
+      <span>Seat</span><span>A1</span>
+      <span>MRP</span><span>₹1800</span>
+      <span>Price</span><span>₹1500</span>
+      <span>Discount</span><span class="green">-₹300</span>
+    </div>
+
+    <!-- Coupon -->
+    <h5>Apply Coupon</h5>
+    <div class="coupon-box">
+      <input type="text" placeholder="Enter coupon">
+      <button>Apply</button>
+    </div>
+
+    <!-- Coins -->
+    <h5>Use GM Coins</h5>
+    <div class="coin-box">
+      <label><input type="radio" name="coin"> Yes</label>
+      <label><input type="radio" name="coin" checked> No</label>
+      <input type="number" placeholder="Edit coin amount">
+    </div>
+
+    <!-- Final Amount -->
+    <div class="final-box">
+      <div><span>Subtotal</span><span>₹1500</span></div>
+      <div><span>Coupon</span><span>-₹100</span></div>
+      <div><span>Coins</span><span>-₹50</span></div>
+      <hr>
+      <div class="bold"><span>Payable</span><span>₹1350</span></div>
+    </div>
+
+    <!-- Payment Methods -->
+    <h5>Select Payment</h5>
+    <div class="method active">UPI (GPay / PhonePe)</div>
+    <div class="method">Debit / Credit Card</div>
+    <div class="method">Wallet Balance</div>
+
+    <button class="pay-btn">Pay ₹1350</button>
+
+  </div>
+</div>
+
+<script>
+fetch("components/navbar.html")
+  .then(res => res.text())
+  .then(data => {
+    document.getElementById("navbar").innerHTML = data;
+  });
+</script>
+
+</body>
+</html>

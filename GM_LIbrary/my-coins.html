@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Coins</title>
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/coins.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+
+<div id="navbar"></div>
+
+<div class="coins-dashboard">
+
+  <div class="coin-hero">
+    <div>
+      <p>Total Balance</p>
+      <h1 id="mainCoins">0</h1>
+      <span>GM Coins</span>
+    </div>
+    <button class="redeem-btn">Redeem</button>
+  </div>
+
+  <div class="coin-stats">
+    <div class="stat-card">
+      <p>Earned</p>
+      <h2 id="earned">0</h2>
+    </div>
+    <div class="stat-card">
+      <p>Spent</p>
+      <h2 id="spent">0</h2>
+    </div>
+    <div class="stat-card">
+      <p>Bonus</p>
+      <h2 id="bonus">0</h2>
+    </div>
+  </div>
+
+  <h3 class="history-title">Coin Activity</h3>
+  <div class="coin-activity" id="coinActivity"></div>
+
+</div>
+
+<script>
+fetch("components/navbar.html")
+  .then(res => res.text())
+  .then(data => {
+    document.getElementById("navbar").innerHTML = data;
+  });
+</script>
+
+<script src="assets/js/navbar.js"></script>
+<script src="assets/js/coins.js"></script>
+</body>
+</html>

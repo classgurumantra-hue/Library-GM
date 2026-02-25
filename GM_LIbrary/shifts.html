@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Choose Shift</title>
+  <link rel="stylesheet" href="assets/css/shifts.css">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+
+<div id="navbar"></div>
+
+<div class="container">
+  <h1>Choose Your Shift</h1>
+
+  <div class="grid">
+
+    <div class="card" onclick="goSeats('Morning')">
+      <!-- THUMBNAIL -->
+      <img src="https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=800&q=80" class="thumb">
+      <h3>Morning</h3>
+      <p>6 AM - 12 PM</p>
+    </div>
+
+    <div class="card" onclick="goSeats('Evening')">
+      <!-- THUMBNAIL -->
+      <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=80" class="thumb">
+      <h3>Evening</h3>
+      <p>1 PM - 7 PM</p>
+    </div>
+
+    <div class="card" onclick="goSeats('Night')">
+      <!-- THUMBNAIL -->
+      <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80" class="thumb">
+      <h3>Night</h3>
+      <p>8 PM - 2 AM</p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+fetch("components/navbar.html")
+  .then(res => res.text())
+  .then(data => {
+    document.getElementById("navbar").innerHTML = data;
+  });
+</script>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

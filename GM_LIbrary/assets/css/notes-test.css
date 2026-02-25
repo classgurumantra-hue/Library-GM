@@ -1,0 +1,57 @@
+body {
+  margin:0;
+  font-family:Segoe UI;
+  background:#f5f7fb;
+}
+
+.page{
+  padding-top:120px;
+  padding-bottom:80px;
+}
+
+.nt-container {
+  text-align:center;
+  width:100%;
+}
+
+.nt-container h1,
+.nt-container p{
+  color:#020617;
+}
+
+.nt-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:40px;
+  width:70%;
+  margin:50px auto 0;
+}
+
+.nt-card {
+  background:#1e293b;
+  padding:50px;
+  border-radius:22px;
+  transition:.3s;
+  color:white;
+}
+
+.nt-card:hover {
+  transform:translateY(-12px);
+  box-shadow:0 25px 50px rgba(0,0,0,.5);
+  background:linear-gradient(135deg,#1e293b,#2563eb);
+}
+
+.nt-card button {
+  margin-top:25px;
+  padding:14px 36px;
+  border:none;
+  border-radius:12px;
+  background:#3b82f6;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+}
+.page-title{
+  margin-top: 60px;   /* jitna niche chahiye utna badhao */
+  margin-bottom: 40px;
+}

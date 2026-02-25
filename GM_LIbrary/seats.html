@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Select Seat</title>
+  <link rel="stylesheet" href="assets/css/seats.css">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+
+</head>
+<body>
+
+<div id="navbar"></div>
+
+<!-- FULL PAGE CENTER WRAPPER -->
+<div class="page">
+  <div class="container">
+    <h1>Select Your Seat</h1>
+    <p id="info">Shift: Morning</p>
+
+    <div class="seats-grid" id="seats"></div>
+
+    <button class="btn" onclick="goPayment()">Proceed to Payment</button>
+  </div>
+</div>
+
+<script>
+fetch("components/navbar.html")
+  .then(res => res.text())
+  .then(data => {
+    document.getElementById("navbar").innerHTML = data;
+  });
+</script>
+
+<script src="assets/js/seats.js"></script>
+<script src="assets/js/main.js"></script>
+
+</body>
+
+</html>

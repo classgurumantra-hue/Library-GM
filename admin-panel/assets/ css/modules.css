@@ -1,0 +1,40 @@
+.card-pro {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    padding: 24px;
+}
+
+/* Table Design */
+.table-pro thead th {
+    background: #f9fafb;
+    font-size: 12px;
+    text-transform: uppercase;
+    color: #6b7280;
+    font-weight: 700;
+    padding: 15px;
+    border: none;
+}
+
+.table-pro tbody td {
+    padding: 15px;
+    vertical-align: middle;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+/* OTP Dropdown Animation */
+.otp-dropdown-box {
+    display: none;
+    background: #f8fafc;
+    border: 2px solid var(--primary);
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 10px;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

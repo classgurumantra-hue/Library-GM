@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Notes & Test</title>
+  <link rel="stylesheet" href="assets/css/notes-test.css">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+
+</head>
+<body>
+<div id="navbar"></div>
+
+<div class="nt-container">
+  <h1>Notes & Test</h1>
+  <h2 class="page-title">Choose what you want to continue</h2>
+
+
+  <div class="nt-grid">
+
+    <div class="nt-card">
+      <h2>📘 Notes</h2>
+      <p>Access study material & PDFs</p>
+      <button>Open Notes</button>
+    </div>
+
+    <div class="nt-card highlight">
+      <h2>📝 Test</h2>
+      <p>Attempt tests and track progress</p>
+      <button onclick="location.href='test-type.html'">Continue</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+fetch("components/navbar.html")
+  .then(res => res.text())
+  .then(data => {
+    document.getElementById("navbar").innerHTML = data;
+  });
+</script>
+
+</body>
+</html>

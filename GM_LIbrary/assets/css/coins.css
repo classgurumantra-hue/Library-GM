@@ -1,0 +1,82 @@
+.coins-dashboard {
+  max-width: 1100px;
+  margin: auto;
+  padding: 40px;
+}
+
+.coin-hero {
+  background: linear-gradient(135deg,#0b2c5d,#003b8f);
+  color: white;
+  border-radius: 20px;
+  padding: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.coin-hero h1 {
+  font-size: 60px;
+  margin: 10px 0;
+}
+
+.redeem-btn {
+  background: #ff7a00;
+  border: none;
+  color: white;
+  padding: 12px 28px;
+  font-size: 16px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.redeem-btn:hover {
+  transform: scale(1.08);
+}
+
+.coin-stats {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 20px;
+  margin: 30px 0;
+}
+
+.stat-card {
+  background: white;
+  padding: 25px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.stat-card h2 {
+  color: #0b2c5d;
+  font-size: 32px;
+}
+
+.history-title {
+  margin: 20px 0;
+  color: #0b2c5d;
+}
+
+.coin-activity {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.activity-row {
+  background: white;
+  padding: 18px 22px;
+  border-radius: 14px;
+  display: flex;
+  justify-content: space-between;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.activity-row span {
+  font-weight: 600;
+}
+
+.plus { color: green; }
+.minus { color: red; }

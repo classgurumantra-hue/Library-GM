@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Booking History</title>
+  <link rel="stylesheet" href="assets/css/booking-hostory.css">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+<div id="navbar"></div>
+<h2>Booking History</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Library</th>
+      <th>Seat</th>
+      <th>Date</th>
+      <th>Amount</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody id="historyTable"></tbody>
+</table>
+
+<script src="assets/js/booking-history.js"></script>
+<script>
+fetch("components/navbar.html")
+  .then(res => res.text())
+  .then(data => {
+    document.getElementById("navbar").innerHTML = data;
+  });
+</script>
+</body>
+</html>

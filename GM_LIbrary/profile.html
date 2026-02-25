@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Profile</title>
+<link rel="stylesheet" href="assets/css/profile.css">
+<link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+
+<div class="profile-container">
+
+<h2>My Profile</h2>
+
+<div class="card">
+<h3>Account Information</h3>
+
+<div class="field">
+<label>Name</label>
+<div class="row">
+<span id="nameText">Kratika</span>
+<button onclick="toggleBox('name')">Change</button>
+</div>
+
+<div class="box" id="nameBox">
+<div class="inner-box">
+<input id="newName" placeholder="Enter new name">
+<button class="green" onclick="saveName()">Verify & Save</button>
+</div>
+</div>
+</div>
+
+<div class="field">
+<label>Mobile</label>
+<div class="row">
+<span id="mobileText">2345678765</span>
+<button onclick="toggleBox('mobile')">Change</button>
+</div>
+
+<div class="box" id="mobileBox">
+<div class="inner-box">
+<input id="newMobile" placeholder="New mobile">
+<button onclick="sendOTP()">Send OTP</button>
+
+<div class="otp-card">
+<p>Enter OTP</p>
+<div class="otp">
+<input maxlength="1"><input maxlength="1"><input maxlength="1">
+<input maxlength="1"><input maxlength="1"><input maxlength="1">
+</div>
+</div>
+
+<button class="green" onclick="saveMobile()">Verify & Save</button>
+</div>
+</div>
+</div>
+
+<div class="field">
+<label>Email</label>
+<div class="row">
+<span id="emailText">rahul@gmail.com</span>
+<button onclick="toggleBox('email')">Change</button>
+</div>
+
+<div class="box" id="emailBox">
+<div class="inner-box">
+<input id="newEmail" placeholder="New email">
+<button onclick="sendOTP()">Send OTP</button>
+
+<div class="otp-card">
+<p>Enter OTP</p>
+<div class="otp">
+<input maxlength="1"><input maxlength="1"><input maxlength="1">
+<input maxlength="1"><input maxlength="1"><input maxlength="1">
+</div>
+</div>
+
+<button class="green" onclick="saveEmail()">Verify & Save</button>
+</div>
+</div>
+</div>
+</div>
+
+<div class="card">
+<h3>Security</h3>
+
+<div class="field">
+<label>Password</label>
+<div class="row">
+************
+<button onclick="toggleBox('pass')">Change</button>
+</div>
+
+<div class="box" id="passBox">
+<div class="inner-box">
+<input type="password" placeholder="Old password">
+<input type="password" placeholder="New password">
+<input type="password" placeholder="Confirm password">
+<button onclick="sendOTP()">Send OTP</button>
+
+<div class="otp-card">
+<p>Enter OTP</p>
+<div class="otp">
+<input maxlength="1"><input maxlength="1"><input maxlength="1">
+<input maxlength="1"><input maxlength="1"><input maxlength="1">
+</div>
+</div>
+
+<button class="green" onclick="savePassword()">Verify & Update</button>
+</div>
+</div>
+</div>
+</div>
+
+<div class="profile-card danger-card">
+  <h2>Delete Account</h2>
+  <p class="danger-text">This action cannot be undone.</p>
+
+  <button class="danger-btn" onclick="openDeleteModal()">
+    Delete My Account
+  </button>
+</div>
+
+<!-- success popup -->
+<div id="successPopup" class="popup-overlay">
+  <div class="popup-box">
+    <h3>Updated Successfully ✅</h3>
+    <p>Your details have been updated.</p>
+    <button onclick="closePopup()">OK</button>
+  </div>
+</div>
+
+
+<script src="assets/js/profile.js"></script>
+
+</body>
+</html>

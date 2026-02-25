@@ -1,0 +1,23 @@
+:root {
+  --primary:#4f46e5;
+  --bg:#f8fafc;
+  --card:#fff;
+  --text:#1e293b;
+}
+
+body {
+  margin:0;
+  font-family:Inter, system-ui;
+  background:var(--bg);
+}
+
+.app {
+  display:flex;
+  height:100vh;
+}
+
+.main-content {
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}

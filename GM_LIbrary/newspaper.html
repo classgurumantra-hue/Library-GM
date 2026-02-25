@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GM Library | E-Newspapers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/newspaper.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+
+<div id="navbar"></div>
+
+<section class="news-header">
+  <h2>📰 Newspapers</h2>
+  <button class="filter-btn">
+    <i class="fas fa-filter"></i> Filter
+  </button>
+</section>
+
+<section class="news-grid">
+
+  <div class="news-card">
+    <img src="assets/images/slider1.png">
+    <h3>The Times of India</h3>
+    <p>English National</p>
+    <a href="https://timesofindia.indiatimes.com" target="_blank">Open</a>
+  </div>
+
+  <div class="news-card">
+    <img src="assets/images/slider2.png">
+    <h3>The Hindu</h3>
+    <p>Trusted Daily</p>
+    <a href="https://www.thehindu.com" target="_blank">Open</a>
+  </div>
+
+  <div class="news-card">
+    <img src="assets/images/slider4.png">
+    <h3>Dainik Bhaskar</h3>
+    <p>Hindi News</p>
+    <a href="https://www.bhaskar.com" target="_blank">Open</a>
+  </div>
+
+  <div class="news-card">
+    <img src="assets/images/slider5.png">
+    <h3>Hindustan Times</h3>
+    <p>Business</p>
+    <a href="https://www.hindustantimes.com" target="_blank">Open</a>
+  </div>
+
+  <div class="news-card">
+    <img src="assets/images/slider3.png">
+    <h3>Indian Express</h3>
+    <p>Politics</p>
+    <a href="https://indianexpress.com" target="_blank">Open</a>
+  </div>
+
+  <div class="news-card">
+    <img src="assets/images/slider2.png">
+    <h3>Amar Ujala</h3>
+    <p>Hindi Regional</p>
+    <a href="https://www.amarujala.com" target="_blank">Open</a>
+  </div>
+
+</section>
+
+<script>
+fetch("components/navbar.html")
+.then(res => res.text())
+.then(data => {
+  document.getElementById("navbar").innerHTML = data;
+});
+</script>
+
+</body>
+</html>

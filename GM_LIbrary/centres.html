@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Choose Centre</title>
+  <link rel="stylesheet" href="assets/css/centres.css">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+
+</head>
+<body>
+<div id="navbar"></div>
+
+<div class="page">
+  <h1 class="page-title">Choose Your Centre</h1>
+  <p class="subtitle">Select the best library near you</p>
+
+  <div class="card-grid">
+
+    <!-- Centre Card -->
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f">
+      <div class="card-body">
+        <h3>GM Library - Vijay Nagar</h3>
+        <p>Premium study environment with AC & WiFi.</p>
+        <p class="price">Admission Fee: ₹500</p>
+        <button onclick="goSection('Vijay Nagar')">Continue</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b">
+      <div class="card-body">
+        <h3>GM Library - Palasia</h3>
+        <p>Silent zone for competitive students.</p>
+        <p class="price">Admission Fee: ₹400</p>
+        <button onclick="goSection('Palasia')">Continue</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+fetch("components/navbar.html")
+  .then(res => res.text())
+  .then(data => {
+    document.getElementById("navbar").innerHTML = data;
+  });
+</script>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>
