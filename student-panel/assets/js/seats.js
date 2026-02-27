@@ -1,22 +1,23 @@
 let selectedSeat = null;
-
 const seatsDiv = document.getElementById("seats");
 const info = document.getElementById("info");
 
-let shift = localStorage.getItem("shift");
+// Get shift from previous page or default
+let shift = localStorage.getItem("shift") || "Morning";
 info.innerText = "Shift: " + shift;
 
-// Fake booked seats
-let bookedSeats = ["A3","A4","B2","C5"];
+// Fake booked seats can be removed if backend provides API for booked seats
+let bookedSeats = []; // optional: fetch from backend if API available
 
-for(let row of ["A","B","C","D","E"]) {
-  for(let i=1;i<=8;i++) {
+// Generate seat grid
+for (let row of ["A","B","C","D","E"]) {
+  for (let i = 1; i <= 8; i++) {
     let seatNo = row + i;
     let seat = document.createElement("div");
     seat.classList.add("seat");
     seat.innerText = seatNo;
 
-    if(bookedSeats.includes(seatNo)) {
+    if (bookedSeats.includes(seatNo)) {
       seat.classList.add("booked");
     } else {
       seat.onclick = () => selectSeat(seat, seatNo);
@@ -26,24 +27,22 @@ for(let row of ["A","B","C","D","E"]) {
   }
 }
 
+// Seat selection
 function selectSeat(el, seatNo) {
-  document.querySelectorAll(".seat").forEach(s=>{
-    s.classList.remove("selected");
-  });
-
+  document.querySelectorAll(".seat").forEach(s => s.classList.remove("selected"));
   el.classList.add("selected");
   selectedSeat = seatNo;
-  localStorage.setItem("seat", seatNo);
+
+  // Save to localStorage for payment page
+  localStorage.setItem("selectedSeat", seatNo);
+  localStorage.setItem("shift", shift);
 }
 
+// Go to payment page
 function goPayment() {
-  let selected = document.querySelectorAll('.seat.selected');
-
-  if (selected.length === 0) {
-    alert("Please select at least 1 seat");
+  if (!selectedSeat) {
+    alert("Please select a seat first!");
     return;
   }
-
-  // Temporary redirect
   window.location.href = "payment.html";
 }
