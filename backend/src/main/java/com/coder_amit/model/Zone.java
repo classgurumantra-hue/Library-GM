@@ -7,11 +7,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name="zones")
+@Table(name = "zones")
 public class Zone {
 
     @Id
-    @Column(name = "zone_name")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "zone_name", unique = true, nullable = false)
     private String zoneName;
 
     private String stateName;

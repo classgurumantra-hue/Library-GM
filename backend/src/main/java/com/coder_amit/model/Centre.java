@@ -14,6 +14,16 @@ public class Centre {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-    private String location;
+    @Column(name = "centre_name")
+    private String centreName;
+
+    private Integer capacity;
+
+    private Double admissionFee;
+
+    private String description;
+
+    @ManyToOne
+    @JoinColumn(name = "zone_id")
+    private Zone zone;
 }

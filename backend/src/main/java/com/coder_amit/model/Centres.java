@@ -4,22 +4,27 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
 @Getter
+@Setter
 @Entity
-@Table( name = "centres")
+@Table(name = "centres")
 public class Centres {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "centre_name")
     private String centreName;
+
     private Integer capacity;
+
+    @Column(name = "admission_fee")
     private Double admissionFee;
+
     private String description;
 
     @ManyToOne
     @JoinColumn(name = "zone_id", nullable = false)
-    private Zone zone;   // Relation to Zone
+    private Zone zone;
 }
-

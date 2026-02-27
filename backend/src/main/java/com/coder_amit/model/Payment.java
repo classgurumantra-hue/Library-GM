@@ -16,6 +16,8 @@ public class Payment {
     private Long id;
 
     private Double amount;
+
+    @Column(name = "payment_date")
     private LocalDate paymentDate;
 
     @ManyToOne
