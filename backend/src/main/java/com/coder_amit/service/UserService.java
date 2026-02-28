@@ -4,6 +4,8 @@ import com.coder_amit.model.User;
 import com.coder_amit.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.coder_amit.model.Role;
+import com.coder_amit.exception.EmailAlreadyExistsException;
 
 import java.util.Optional;
 
@@ -20,12 +22,16 @@ public class UserService {
     }
 
     // ✅ Signup Logic
-    public User signup(User user){
+   public User signup(User user){
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        return userRepository.save(user);
+    if(userRepository.findByEmail(user.getEmail()).isPresent()){
+        throw new EmailAlreadyExistsException("Email already registered!");
     }
+
+    user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+    return userRepository.save(user);
+}
 
     // ✅ Login Logic
     public Optional<User> login(String username, String password){
@@ -42,4 +48,9 @@ public class UserService {
 
         return Optional.empty();
     }
+
+    public boolean isEmailExist(String email){
+    return userRepository.findByEmail(email).isPresent();
+}
+
 }

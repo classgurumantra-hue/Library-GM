@@ -4,5 +4,6 @@ public enum Role {
     ADMIN,
     SUB_ADMIN,
     CO_ADMIN,
-    VENDOR
+    VENDOR,
+    STUDENT 
 }

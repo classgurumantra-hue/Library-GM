@@ -5,6 +5,8 @@ import com.coder_amit.service.UserService;
 import com.coder_amit.service.OtpService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 import java.util.Optional;
 
 @RestController
@@ -25,33 +27,48 @@ public class UserController {
 @PostMapping("/signup")
 public ResponseEntity<?> signup(@RequestBody User user){
 
-    if(user.getEmail() != null){
-
-        if(!otpService.isOtpVerified(user.getEmail())){
-            return ResponseEntity.badRequest()
-                    .body("Signup successfully");
-        }
+    if(user.getEmail() == null){
+        return ResponseEntity.badRequest()
+                .body(Map.of("message","Email is required"));
     }
 
-    User savedUser = userService.signup(user);
+    if(!otpService.isOtpVerified(user.getEmail())){
+        return ResponseEntity.badRequest()
+                .body(Map.of("message","Invalid OTP"));
+    }
 
-    return ResponseEntity.ok(savedUser);
+    if(userService.isEmailExist(user.getEmail())){
+        return ResponseEntity.badRequest()
+                .body(Map.of("message","Email already registered"));
+    }
+
+    userService.signup(user);
+
+    return ResponseEntity.ok(
+            Map.of("message","Signup successfully")
+    );
 }
 
 
-
     // ⭐ Login API (Ab ye error nahi dega)
-    @PostMapping("/login")
-    public Object login(@RequestBody User user){
+@PostMapping("/login")
+public ResponseEntity<?> login(@RequestBody User user){
 
-        Optional<User> result = 
-                userService.login(user.getUsername(), user.getPassword());
+    Optional<User> result =
+            userService.login(user.getUsername(), user.getPassword());
 
-        // Yahan galti thi, ab solve ho gayi hai
-        if (result.isPresent()) {
-            return result.get(); // User object return karega
-        } else {
-            return "Invalid username or password"; // String return karega
-        }
+    if(result.isPresent()){
+        return ResponseEntity.ok(
+                Map.of(
+                        "message","Login successful",
+                        "user",result.get().getUsername()
+                )
+        );
     }
+    else{
+        return ResponseEntity.badRequest()
+                .body(Map.of("message","Username or password not match"));
+    }
+}
+
 }

@@ -69,6 +69,8 @@ public class OtpController {
             otpExpiry.remove(email);
             otpVerified.put(email, true);
 
+            otpService.markOtpVerified(email);
+
             return "OTP verified successfully";
         }
 

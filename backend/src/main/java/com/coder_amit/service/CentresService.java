@@ -41,4 +41,10 @@ public Centres updateCentres(Long id, Centres centresDetails, Long zoneId){
 public void  deleteCentres(Long id){
         centresRepository.deleteById(id);
 }
+public List<Centres> getCentresByZone(Long zoneId){
+    return centresRepository.findAll()
+            .stream()
+            .filter(c -> c.getZone().getId().equals(zoneId))
+            .toList();
+}
 }
