@@ -8,6 +8,8 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700.css" rel="stylesheet">
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
 <link href="assets/css/register.css" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/main.css">
 <link rel="stylesheet" href="assets/css/responsive.css">
@@ -24,11 +26,34 @@
 <h4 class="text-center mb-3">Register with GM Library</h4>
 
 <input class="form-control mb-2" id="fullname" placeholder="Full Name">
+<small id="fullnameError" style="color:red; display:none;">
+Field required
+</small>
 <input class="form-control mb-2" id="mobile" placeholder="Mobile Number">
+<small id="mobileError" style="color:red; display:none;">
+Field required
+</small>
 
-<div class="d-flex gap-2">
-  <input class="form-control" id="email" placeholder="Email">
-  <button class="btn btn-primary" onclick="sendOTP()">Send OTP</button>
+<div class="d-flex gap-2 align-items-start mt-2">
+
+    <!-- Email Field -->
+    <div style="flex:1">
+        <input class="form-control" id="email" placeholder="Email">
+
+        <small id="emailError" style="color:red; display:none;">
+        Field required
+        </small>
+    </div>
+
+    <!-- OTP Button (Small Size ⭐) -->
+    <div>
+        <button class="btn btn-primary"
+        style="padding:6px 12px; font-size:14px;"
+        onclick="sendOTP()">
+        Send OTP
+        </button>
+    </div>
+
 </div>
 
 <div id="otpBox" class="otp-box mt-2" style="display:none">
@@ -36,8 +61,28 @@
   <button class="btn btn-success w-100" onclick="verifyOTP()">Verify OTP</button>
 </div>
 
-<input class="form-control mt-2" id="password" type="password" placeholder="Create Password">
-<input class="form-control mt-2" id="confirmPassword" type="password" placeholder="Confirm Password">
+<div class="input-group mt-2">
+<input class="form-control" id="password" type="password" placeholder="Create Password">
+<span class="input-group-text" onclick="togglePass('password')">
+<i class="bi bi-eye"></i>
+</span>
+</div>
+<small id="passwordError" style="color:red; display:none;">
+Field required
+</small>
+
+<div class="input-group mt-2">
+<input class="form-control" id="confirmPassword" type="password" placeholder="Confirm Password">
+<span class="input-group-text" onclick="togglePass('confirmPassword')">
+<i class="bi bi-eye"></i>
+</span>
+</div>
+<small id="confirmPassError" style="color:red; display:none;">
+Password does not match
+</small>
+<small id="confirmPasswordError" style="color:red; display:none;">
+Field required
+</small>
 
 <select class="form-control mt-2" id="gender">
 <option selected disabled>Gender</option>
@@ -45,6 +90,9 @@
 <option>Female</option>
 <option>Other</option>
 </select>
+<small id="genderError" style="color:red; display:none;">
+Field required
+</small>
 
 <input class="form-control mt-2" id="referral" placeholder="Referral Code (optional)">
 
@@ -130,10 +178,7 @@ async function signup(){
         let gender = document.getElementById("gender").value;
         let referral = document.getElementById("referral").value;
 
-        if(password !== confirmPassword){
-            alert("Password mismatch");
-            return;
-        }
+      
 
         let response = await fetch("http://localhost:8087/api/auth/signup",{
             method:"POST",
@@ -148,7 +193,7 @@ async function signup(){
                 password,
                 gender,
                 referralCode: referral,
-                role:"SUB_ADMIN"
+                role:"STUDENT"
             })
         });
 
@@ -171,5 +216,115 @@ async function signup(){
 }
 </script>
 
+<script>
+function togglePass(id){
+    let input = document.getElementById(id);
+    if(input.type === "password"){
+        input.type = "text";
+    }else{
+        input.type = "password";
+    }
+}
+</script>
+
+
+<script>
+let passwordInput = document.getElementById("password");
+let confirmPasswordInput = document.getElementById("confirmPassword");
+let errorSpan = document.getElementById("confirmPassError");
+
+function validateConfirmPassword(){
+
+    if(confirmPasswordInput.value === ""){
+        errorSpan.style.display = "none";
+        return;
+    }
+
+    if(passwordInput.value !== confirmPasswordInput.value){
+        errorSpan.style.display = "block";
+    }else{
+        errorSpan.style.display = "none";
+    }
+}
+
+passwordInput.addEventListener("input", validateConfirmPassword);
+confirmPasswordInput.addEventListener("input", validateConfirmPassword);
+</script>
+
+<script>
+async function signup(){
+
+    let fields = [
+        {id:"fullname", error:"fullnameError"},
+        {id:"mobile", error:"mobileError"},
+        {id:"email", error:"emailError"},
+        {id:"password", error:"passwordError"},
+        {id:"confirmPassword", error:"confirmPasswordError"},
+        {id:"gender", error:"genderError"}
+    ];
+
+    let isValid = true;
+
+    fields.forEach(f=>{
+        document.getElementById(f.error).style.display="none";
+
+        let value = document.getElementById(f.id).value.trim();
+
+        if(value === "" || value === "Gender"){
+            document.getElementById(f.error).style.display="block";
+            isValid = false;
+        }
+    });
+
+    let password = document.getElementById("password").value;
+    let confirmPassword = document.getElementById("confirmPassword").value;
+
+    if(password !== confirmPassword){
+        document.getElementById("confirmPassError").style.display="block";
+        isValid = false;
+    }
+
+    if(!isValid) return;
+
+    // ⭐ API CALL
+    try{
+
+        let fullname = document.getElementById("fullname").value;
+        let mobile = document.getElementById("mobile").value;
+        let email = document.getElementById("email").value;
+        let gender = document.getElementById("gender").value;
+        let referral = document.getElementById("referral").value;
+
+        let response = await fetch("http://localhost:8087/api/auth/signup",{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify({
+                fullname,
+                mobile,
+                username: email,
+                email,
+                password,
+                gender,
+                referralCode: referral,
+                role:"STUDENT"
+            })
+        });
+
+        let data = await response.json();
+
+        if(response.ok){
+            alert(data.message);
+            window.location.href="login.html";
+        }else{
+            alert(data.message);
+        }
+
+    }catch(err){
+        alert("Signup failed");
+    }
+}
+</script>
 </body>
 </html>

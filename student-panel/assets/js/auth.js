@@ -102,34 +102,32 @@ async function signup(){
     }
 
     try{
+let response = await fetch(BACKEND_URL+"/api/auth/signup",{
+    method:"POST",
+    headers:{
+        "Content-Type":"application/json"
+    },
+    body:JSON.stringify({
+        fullname,
+        mobile,
+        username: email,
+        email,
+        password,
+        gender,
+        referralCode: referral,
+        role:"ADMIN"
+    })
+});
 
-        let response = await fetch(BACKEND_URL+"/api/auth/signup",{
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
-            },
-            body:JSON.stringify({
-                fullname,
-                mobile,
-                username: email,
-                email,
-                password,
-                gender,
-                referralCode: referral,
-                role:"ADMIN"
-            })
-        });
+let data = await response.json();
 
-        let text = await response.text();
-
-        if(response.ok){
-            alert("Signup Success 🎉");
-            window.location.href="login.html";
-        }
-        else{
-            alert(text);
-        }
-
+if(response.ok){
+    alert(data.message);
+    window.location.href="login.html";
+}
+else{
+    alert(data.message);
+}
     }catch(err){
         alert("Signup failed");
     }

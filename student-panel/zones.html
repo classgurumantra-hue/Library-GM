@@ -8,39 +8,49 @@
   <link rel="stylesheet" href="assets/css/responsive.css">
 
 </head>
+
+<style>
+.zone-card{
+    border-radius:18px;
+    transition:0.3s;
+    cursor:pointer;
+    box-shadow:0 0 12px rgba(0,0,0,0.08);
+    padding:20px;
+    height:100%;
+}
+
+.zone-card:hover{
+    transform:translateY(-6px);
+}
+
+.zone-title{
+    font-weight:600;
+}
+
+.zone-desc{
+    font-size:14px;
+    color:#6c757d;
+}
+</style>
 <body>
+
 <div id="navbar"></div>
 
-<div class="page">
-  <h1 class="page-title">Choose Your Zone</h1>
-
-  <div class="card-grid">
-
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f">
-      <h3>Indore</h3>
-      <p>Best study zone in Indore city.</p>
-      <button onclick="goCentre('Indore')">Continue</button>
-    </div>
-
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b">
-      <h3>Bhopal</h3>
-      <p>Silent environment for focus.</p>
-      <button onclick="goCentre('Bhopal')">Continue</button>
-    </div>
-
-  </div>
+<div class="container mt-4">
+    <h4 class="mb-4">Choose Zone</h4>
+    <div id="zoneList" class="row card-grid"></div>
 </div>
 
 <script>
 fetch("components/navbar.html")
-  .then(res => res.text())
-  .then(data => {
+.then(res => res.text())
+.then(data => {
     document.getElementById("navbar").innerHTML = data;
-  });
+});
 </script>
 
 <script src="assets/js/main.js"></script>
+
+</body>
 </body>
 </html>
