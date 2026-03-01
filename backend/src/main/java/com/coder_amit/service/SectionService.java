@@ -10,32 +10,53 @@ import java.util.List;
 
 @Service
 public class SectionService {
+
     private final SectionRepository sectionRepository;
     private final CentreRepository centreRepository;
 
-    public SectionService(SectionRepository sectionRepository, CentreRepository centreRepository) {
+    public SectionService(SectionRepository sectionRepository,
+                          CentreRepository centreRepository) {
         this.sectionRepository = sectionRepository;
         this.centreRepository = centreRepository;
     }
 
+    // ✅ Create Section
     public Section createSection(Section section, Long centreId) {
+
         Centre centre = centreRepository.findById(centreId)
                 .orElseThrow(() -> new RuntimeException("Centre not found"));
+
         section.setCentre(centre);
         return sectionRepository.save(section);
     }
 
+    // ✅ Get All Sections
     public List<Section> getAllSections() {
         return sectionRepository.findAll();
     }
 
+    // ✅ Get Sections By Centre ID (Important API)
+    public List<Section> getSectionsByCentreId(Long centreId) {
+        return sectionRepository.findAll()
+                .stream()
+                .filter(section ->
+                        section.getCentre() != null &&
+                        section.getCentre().getId().equals(centreId)
+                )
+                .toList();
+    }
+
+    // ✅ Get Section By ID
     public Section getSectionById(Long id) {
         return sectionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Section not found"));
     }
 
+    // ✅ Update Section
     public Section updateSection(Long id, Section sectionDetails, Long centreId) {
+
         Section section = getSectionById(id);
+
         Centre centre = centreRepository.findById(centreId)
                 .orElseThrow(() -> new RuntimeException("Centre not found"));
 
@@ -51,6 +72,7 @@ public class SectionService {
         return sectionRepository.save(section);
     }
 
+    // ✅ Delete Section
     public void deleteSection(Long id) {
         sectionRepository.deleteById(id);
     }

@@ -1,5 +1,5 @@
 package com.coder_amit.model;
-
+import com.coder_amit.model.Centre;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

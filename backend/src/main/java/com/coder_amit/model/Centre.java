@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "centre")
+@Table(name = "centres")
 public class Centre {
 
     @Id
@@ -19,11 +19,12 @@ public class Centre {
 
     private Integer capacity;
 
+    @Column(name = "admission_fee")
     private Double admissionFee;
 
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "zone_id")
+    @JoinColumn(name = "zone_id", nullable = false)
     private Zone zone;
 }

@@ -17,6 +17,14 @@ public class ShiftService {
         this.sectionRepository = sectionRepository;
     }
 
+    public List<Shift> getShiftsBySectionId(Long sectionId) {
+    return shiftRepository.findAll()
+            .stream()
+            .filter(shift -> shift.getSection() != null
+                    && shift.getSection().getId().equals(sectionId))
+            .toList();
+}
+
     public Shift createShift(Shift shift, Long sectionId) {
         Section section = sectionRepository.findById(sectionId)
                 .orElseThrow(() -> new RuntimeException("Section not found"));

@@ -14,17 +14,18 @@ public class PaymentService {
     @Autowired
     private BookingRepository bookingRepository;
 
-    // Process payment and attach to booking
-    public Booking processPayment(String seatNumber, Payment payment) throws Exception {
-        Optional<Booking> optionalBooking = bookingRepository.findBySeatNumber(seatNumber);
+    public Payment processPayment(Long bookingId) throws Exception {
 
-        if (optionalBooking.isEmpty()) {
-            throw new Exception("Booking not found for seat: " + seatNumber);
-        }
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new Exception("Booking not found"));
 
-        Booking booking = optionalBooking.get();
+        Payment payment = new Payment();
+        payment.setStatus("SUCCESS");
+
         booking.setPayment(payment);
 
-        return bookingRepository.save(booking);
+        bookingRepository.save(booking);
+
+        return payment;
     }
 }

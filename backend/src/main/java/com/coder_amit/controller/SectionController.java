@@ -23,6 +23,11 @@ public class SectionController {
         return sectionService.getAllSections();
     }
 
+    @GetMapping("/centre/{centreId}")
+public List<Section> getSectionsByCentreId(@PathVariable Long centreId) {
+    return sectionService.getSectionsByCentreId(centreId);
+}
+
     @GetMapping("/{id}")
     public Section getSectionById(@PathVariable Long id) {
         return sectionService.getSectionById(id);

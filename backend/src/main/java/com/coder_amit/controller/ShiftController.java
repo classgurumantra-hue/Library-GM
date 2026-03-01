@@ -13,6 +13,11 @@ public class ShiftController {
         this.shiftService = shiftService;
     }
 
+    @GetMapping("/section/{sectionId}")
+public List<Shift> getShiftsBySectionId(@PathVariable Long sectionId) {
+    return shiftService.getShiftsBySectionId(sectionId);
+}
+
     @PostMapping("/{sectionId}")
     public Shift createShift(@RequestBody Shift shift, @PathVariable Long sectionId) {
         return shiftService.createShift(shift, sectionId);

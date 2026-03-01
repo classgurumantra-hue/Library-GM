@@ -1,5 +1,5 @@
 package com.coder_amit.model;
-
+import com.coder_amit.model.Shift;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +15,11 @@ public class Booking {
     private Long id;
 
     private String seatNumber;
-    private String shift;
+
+   @ManyToOne
+   @JoinColumn(name = "shift_id")
+   private Shift shift;
+    
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "payment_id")

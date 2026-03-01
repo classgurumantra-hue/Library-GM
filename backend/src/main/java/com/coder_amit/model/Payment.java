@@ -1,5 +1,5 @@
 package com.coder_amit.model;
-
+import com.coder_amit.model.Centre;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +16,9 @@ public class Payment {
     private Long id;
 
     private Double amount;
-
+    
+    private String status;
+    
     @Column(name = "payment_date")
     private LocalDate paymentDate;
 

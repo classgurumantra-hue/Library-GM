@@ -36,6 +36,10 @@ public class CentresController {
     public void deleteCentres(@PathVariable Long id) {
         centresService.deleteCentres(id);
     }
-
+    
+    @GetMapping("/zone/{zoneId}")
+public List<Centres> getCentresByZone(@PathVariable Long zoneId) {
+    return centresService.getCentresByZone(zoneId);
+}
 
 }
