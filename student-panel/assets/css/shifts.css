@@ -108,3 +108,16 @@ body {
   border-radius:12px;
   margin-bottom:12px;
 }
+#shift-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
+    gap: 20px;
+    width: 100%;
+}
+#shift-grid .card {
+    max-width: 300px;
+    width: 100%;
+    text-align: center;
+}

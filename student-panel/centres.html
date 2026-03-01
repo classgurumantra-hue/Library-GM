@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
   <title>Choose Centre</title>
   <link rel="stylesheet" href="assets/css/centres.css">
   <link rel="stylesheet" href="assets/css/main.css">
@@ -11,7 +14,7 @@
 <body>
 <div id="navbar"></div>
 
-<div id="navbar"></div>
+
 
 <div class="page">
 
@@ -19,7 +22,7 @@
   <p class="subtitle">Select the best library near you</p>
 
   <div class="container mt-4">
-      <div id="centreList" class="row"></div>
+      <div id="centreList" class="row justify-content-center"></div>
   </div>
 
 </div>
@@ -44,19 +47,19 @@ document.addEventListener("DOMContentLoaded", function(){
     .then(data => {
 
         const centreList = document.getElementById("centreList");
-        if(!centreList) return;
 
         centreList.innerHTML = "";
 
         data.forEach(centre => {
 
             const div = document.createElement("div");
+
             div.className = "col-md-4 mb-4";
 
             div.innerHTML = `
             <div class="card shadow border-0 h-100">
 
-                <img src="https://source.unsplash.com/400x250/?library,study"
+                <img src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f"
                      style="height:180px;width:100%;object-fit:cover">
 
                 <div class="card-body text-center">
@@ -71,10 +74,10 @@ document.addEventListener("DOMContentLoaded", function(){
                         Admission Fee: ₹${centre.admissionFee || 0}
                     </p>
 
-                    <button class="btn btn-success btn-sm"
-                        onclick="goSection('${centre.centreName}')">
-                        Continue
-                    </button>
+                    <button class="btn btn-primary"
+                    onclick="goSection('${centre.id}','${centre.centreName}')">
+                    Continue
+                   </button>
 
                 </div>
             </div>

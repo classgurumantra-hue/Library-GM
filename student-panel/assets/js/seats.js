@@ -1,48 +1,120 @@
 let selectedSeat = null;
+
 const seatsDiv = document.getElementById("seats");
 const info = document.getElementById("info");
 
-// Get shift from previous page or default
-let shift = localStorage.getItem("shift") || "Morning";
-info.innerText = "Shift: " + shift;
+const shiftName = localStorage.getItem("selectedShiftName");
 
-// Fake booked seats can be removed if backend provides API for booked seats
-let bookedSeats = []; // optional: fetch from backend if API available
+if(shiftName){
+    document.getElementById("info").innerText = "Shift: " + shiftName;
+}
 
-// Generate seat grid
-for (let row of ["A","B","C","D","E"]) {
-  for (let i = 1; i <= 8; i++) {
-    let seatNo = row + i;
-    let seat = document.createElement("div");
-    seat.classList.add("seat");
-    seat.innerText = seatNo;
+/* Shift ID from localStorage */
+const shiftId = localStorage.getItem("selectedShiftId");
 
-    if (bookedSeats.includes(seatNo)) {
-      seat.classList.add("booked");
-    } else {
-      seat.onclick = () => selectSeat(seat, seatNo);
+console.log("Shift ID:", shiftId);
+
+if (!shiftId) {
+    alert("Shift not selected");
+    window.location.href = "shifts.html";
+}
+
+/* Load Shift Seats from Backend */
+window.onload = function () {
+
+    fetch("http://localhost:8087/api/seats/" + shiftId)
+    .then(res => res.json())
+    .then(seats => {
+
+        seatsDiv.innerHTML = "";
+
+        if (!seats || seats.length === 0) {
+            seatsDiv.innerHTML = "<p>No seats available</p>";
+            return;
+        }
+
+        seats.forEach(seat => {
+
+            const seatDiv = document.createElement("div");
+            seatDiv.classList.add("seat");
+
+            seatDiv.innerText = seat.seatNumber;
+
+            if (seat.status === "BOOKED") {
+                seatDiv.classList.add("booked");
+            }
+            else {
+                seatDiv.onclick = () => selectSeat(seatDiv, seat.seatNumber);
+            }
+
+            seatsDiv.appendChild(seatDiv);
+
+        });
+
+    })
+    .catch(err => {
+        console.error(err);
+        seatsDiv.innerHTML = "<p>Error loading seats</p>";
+    });
+
+};
+
+/* Seat Selection */
+function selectSeat(el, seatNo) {
+
+    document.querySelectorAll(".seat")
+    .forEach(s => s.classList.remove("selected"));
+
+    el.classList.add("selected");
+
+    selectedSeat = seatNo;
+
+    localStorage.setItem("selectedSeat", seatNo);
+
+    const bookingData = {
+        zone: localStorage.getItem("selectedZoneName") || "-",
+        centre: localStorage.getItem("selectedCentreName") || "-",
+        time: localStorage.getItem("selectedShiftName") || "-",
+        seat: seatNo,
+        mrp: localStorage.getItem("seatMRP") || 0,
+        price: localStorage.getItem("finalPrice") || 0,
+        discount: localStorage.getItem("discountAmount") || 0
+    };
+
+    localStorage.setItem("bookingData", JSON.stringify(bookingData));
+}
+
+/* Payment Page */
+function goPayment() {
+
+    if (!selectedSeat) {
+        alert("Please select a seat first");
+        return;
     }
 
-    seatsDiv.appendChild(seat);
-  }
+    const bookingData = {
+        zone: localStorage.getItem("selectedZoneName") || "-",
+        centre: localStorage.getItem("selectedCentreName") || "-",
+        time: localStorage.getItem("selectedShiftName") || "-",
+        seat: selectedSeat,
+        mrp: localStorage.getItem("seatMRP") || 0,
+        price: localStorage.getItem("finalPrice") || 0,
+        discount: localStorage.getItem("discountAmount") || 0
+    };
+
+    localStorage.setItem("bookingData", JSON.stringify(bookingData));
+
+    window.location.href = "payment.html";
 }
 
-// Seat selection
-function selectSeat(el, seatNo) {
-  document.querySelectorAll(".seat").forEach(s => s.classList.remove("selected"));
-  el.classList.add("selected");
-  selectedSeat = seatNo;
+window.addEventListener("DOMContentLoaded", function () {
 
-  // Save to localStorage for payment page
-  localStorage.setItem("selectedSeat", seatNo);
-  localStorage.setItem("shift", shift);
-}
+    const payBtn = document.querySelector(".proceed-payment");
 
-// Go to payment page
-function goPayment() {
-  if (!selectedSeat) {
-    alert("Please select a seat first!");
-    return;
-  }
-  window.location.href = "payment.html";
-}
+    if (payBtn) {
+        payBtn.onclick = function () {
+            goPayment();
+        };
+    }
+
+});

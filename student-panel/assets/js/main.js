@@ -1,11 +1,16 @@
 // ---------- Navigation ----------
-function goCentre(zoneId) {
-    localStorage.setItem("zoneId", zoneId);
+function goCentre(zoneId, zoneName) {
+
+    localStorage.setItem("selectedZoneName", zoneName);
+    localStorage.setItem("selectedZoneId", zoneId);
+
     window.location.href = "centres.html";
 }
+function goSection(centreId, centreName){
 
-function goSection(centre) {
-    localStorage.setItem("centre", centre);
+    localStorage.setItem("selectedCentreName", centreName);
+    localStorage.setItem("centreId", centreId);
+
     window.location.href = "sections.html";
 }
 
@@ -58,10 +63,10 @@ document.addEventListener("DOMContentLoaded", function () {
                             ${zone.description ? zone.description : "Best study zone"}
                         </p>
 
-                        <button class="btn btn-primary btn-sm"
-                                onclick="goCentre('${zone.id}')">
-                            Continue
-                        </button>
+                       <button class="btn btn-primary zone-continue-btn"
+                       onclick="goCentre('${zone.id}','${zone.zoneName}')">
+                       Continue
+                      </button>
 
                     </div>
                 </div>
