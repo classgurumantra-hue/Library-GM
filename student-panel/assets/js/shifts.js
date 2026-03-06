@@ -24,6 +24,23 @@ fetch(`http://localhost:8087/api/shifts/section/${sectionId}`)
     }
 
     shifts.forEach(shift => {
+        function formatTime(time){
+    if(!time) return "";
+
+    let [h,m] = time.split(":");
+
+    h = parseInt(h);
+
+    const ampm = h >= 12 ? "PM" : "AM";
+
+    h = h % 12;
+    h = h ? h : 12;
+
+    return `${h}:${m} ${ampm}`;
+}
+
+const start = formatTime(shift.startTime);
+const end = formatTime(shift.endTime);
 
         const card = document.createElement("div");
         card.className = "card shadow border-0 col-md-4 mb-3";
@@ -36,7 +53,7 @@ fetch(`http://localhost:8087/api/shifts/section/${sectionId}`)
 
                 <h3>${shift.name}</h3>
 
-                <p>${shift.startTime} - ${shift.endTime}</p>
+                <p>${start} - ${end}</p>
 
                 <button class="btn btn-primary btn-sm select-shift-btn">
                 Select Shift
@@ -49,6 +66,11 @@ fetch(`http://localhost:8087/api/shifts/section/${sectionId}`)
 
             localStorage.setItem("selectedShiftId", shift.id);
             localStorage.setItem("selectedShiftName", shift.name);
+
+            localStorage.setItem("seatMRP", shift.mrp);
+localStorage.setItem("finalPrice", shift.price);
+localStorage.setItem("discountAmount", shift.discountValue);
+
 
             window.location.href = "seats.html";
 

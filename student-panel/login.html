@@ -74,10 +74,25 @@ async function login(){
 
         let data = await response.json();
 
-        if(response.ok){
-            alert(data.message);
-            window.location.href="index.html";
-        }
+       if(response.ok){
+
+    alert(data.message);
+
+    if(data.user.role === "ADMIN"){
+
+        localStorage.setItem("adminUser", JSON.stringify(data.user));
+
+        window.location.href="../admin-panel/index.html";
+
+    }else{
+
+        localStorage.setItem("studentId", data.user.id);
+
+        window.location.href="index.html";
+
+    }
+
+}
         else{
             alert(data.message);
         }

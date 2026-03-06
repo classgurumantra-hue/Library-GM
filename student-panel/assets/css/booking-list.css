@@ -12,7 +12,12 @@ body {
   box-shadow:0 4px 10px rgba(0,0,0,0.1);
 }
 
-.status {
-  color:green;
-  font-weight:bold;
+.status-active{
+  color: #16a34a !important;
+  font-weight: 600;
+}
+
+.status-expired{
+  color: #dc2626 !important;
+  font-weight: 600;
 }

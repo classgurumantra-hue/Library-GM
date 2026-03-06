@@ -28,24 +28,56 @@
                                     <th class="text-center">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="ps-4 fw-semibold">Rahul Sharma</td>
-                                    <td>rahul@example.com</td>
-                                    <td>+91 98XXX XXXXX</td>
-                                    <td>15 Feb 2026</td>
-                                    <td><span class="badge bg-success-subtle text-success px-3">500</span></td>
-                                    <td class="text-center">
-                                        <button class="btn btn-light btn-sm me-2" title="History"><i class="bi bi-clock-history text-primary"></i></button>
-                                        <button class="btn btn-light btn-sm" title="Reserve Seat"><i class="bi bi-chair text-danger"></i></button>
-                                    </td>
-                                </tr>
-                                </tbody>
+                            <tbody id="studentsTable">
+                            </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+
+async function loadStudents(){
+
+    const response = await fetch("http://localhost:8087/api/auth/students");
+    const students = await response.json();
+
+    const table = document.getElementById("studentsTable");
+
+    table.innerHTML = "";
+
+    students.forEach(student => {
+
+        if(student.role !== "STUDENT") return;
+
+        const row = `
+        <tr>
+            <td class="ps-4 fw-semibold">${student.fullname}</td>
+            <td>${student.email}</td>
+            <td>${student.mobile}</td>
+            <td>-</td>
+            <td><span class="badge bg-success-subtle text-success px-3">0</span></td>
+            <td class="text-center">
+                <button class="btn btn-light btn-sm me-2">
+                    <i class="bi bi-clock-history text-primary"></i>
+                </button>
+                <button class="btn btn-light btn-sm">
+                    <i class="bi bi-chair text-danger"></i>
+                </button>
+            </td>
+        </tr>
+        `;
+
+        table.innerHTML += row;
+
+    });
+
+}
+
+loadStudents();
+
+</script>
 </body>
 </html>

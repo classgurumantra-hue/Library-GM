@@ -1,19 +1,30 @@
 document.addEventListener("DOMContentLoaded", function () {
+  const bookingData = JSON.parse(localStorage.getItem("bookingData") || "{}");
+  if(Number(bookingData.price) < 100){
+alert("Coupon not applicable for this price");
+return;
+}
 
-    const bookingData = JSON.parse(localStorage.getItem("bookingData") || "{}");
+  let payableAmount = Number(bookingData.price || 0);
+  const coinInput = document.querySelector(".coin-box input[type='number']");
+  document.getElementById("payAmount").innerText = bookingData.price || 0;
 
-    const bookingId = localStorage.getItem("bookingId");
+  document.getElementById("subtotalAmount").innerText = bookingData.price || 0;
+  document.getElementById("couponAmount").innerText = 0;
+  document.getElementById("coinAmount").innerText = 0;
+  document.getElementById("payableAmount").innerText = bookingData.price || 0;
 
-    const sub = document.querySelector(".sub");
-    const summary = document.querySelector(".booking-summary");
+  const bookingId = localStorage.getItem("bookingId");
 
-    if (bookingData.seat) {
-        sub.innerText = `Seat reserved for ${bookingData.seat}`;
-    }
+  const sub = document.querySelector(".sub");
+  const summary = document.querySelector(".booking-summary");
 
-    if (summary) {
+  if (bookingData.seat) {
+    sub.innerText = `Seat reserved for ${bookingData.seat}`;
+  }
 
-        summary.innerHTML = `
+  if (summary) {
+    summary.innerHTML = `
             <span>Zone</span><span>${bookingData.zone || "-"}</span>
             <span>Centre</span><span>${bookingData.centre || "-"}</span>
             <span>Time</span><span>${bookingData.time || "-"}</span>
@@ -22,48 +33,179 @@ document.addEventListener("DOMContentLoaded", function () {
             <span>Price</span><span>₹${bookingData.price || 0}</span>
             <span>Discount</span><span class="green">-₹${bookingData.discount || 0}</span>
         `;
-    }
+  }
 
-    const payBtn = document.querySelector(".pay-btn");
+  const payBtn = document.querySelector(".pay-btn");
 
-    if (payBtn) {
+  if (payBtn) {
+    payBtn.onclick = async function () {
+      const amount = payableAmount;
+      const payable = Math.round(Number(document.getElementById("payAmount").innerText));
+      if (!bookingId) {
+        alert("Booking ID missing!");
+        return;
+      }
 
-        payBtn.onclick = async function () {
+      try {
+        // 1️⃣ Create order from backend
+        
 
-            if (!bookingId) {
-                alert("Booking ID missing!");
-                return;
-            }
+        console.log("PAYABLE SENT TO BACKEND:", payableAmount);
 
-            this.innerText = "Processing...";
+const orderResponse = await fetch(
+  "http://localhost:8087/api/payments/create-order?amount=" + payable,
+  { method: "POST" }
+);
 
-            try {
+        const orderText = await orderResponse.text();
+        const order = JSON.parse(orderText);
 
-                const response = await fetch(
-                    "http://localhost:8087/api/payments/" + bookingId,
-                    {
-                        method: "POST"
-                    }
-                );
+        // 2️⃣ Razorpay options
+        const options = {
+          key: "rzp_test_SNE9rQ7TRmA6PN",
+          amount: order.amount,
+          display_amount: payable,
+          currency: "INR",
+          name: "GM Library",
+          description: "Seat Booking Payment",
+          order_id: order.id,
 
-                if (!response.ok) {
-                    throw new Error("Payment failed");
-                }
+          handler: async function (response) {
+            console.log("PAYMENT SUCCESS", response);
 
-                alert("Payment Successful!");
+            // 3️⃣ Save payment in backend
+            await fetch(
+              "http://localhost:8087/api/payments/create?bookingId=" +
+                bookingId +
+                "&razorpayOrderId=" +
+                response.razorpay_order_id,
+              { method: "POST" },
+            );
 
-                localStorage.removeItem("selectedSeat");
-                localStorage.removeItem("bookingId");
-                localStorage.removeItem("bookingData");
+            alert("Payment Successful!");
 
-                window.location.href = "success.html";
+            localStorage.removeItem("selectedSeat");
+            localStorage.removeItem("bookingId");
+            localStorage.removeItem("bookingData");
 
-            } catch (err) {
-                alert(err.message);
-            }
-
-            this.innerText = "Pay Now";
+            window.location.href = "success.html";
+          },
         };
-    }
+
+        // 4️⃣ Open Razorpay popup
+        console.log("OPENING RAZORPAY");
+        const rzp = new Razorpay(options);
+        rzp.open();
+      } catch (err) {
+        console.log(err);
+        alert("Payment failed: " + err);
+      }
+    };
+  }
+});
+async function applyCoupon(){
+
+const code = document.getElementById("couponCode").value;
+
+if(!code){
+alert("Enter coupon code");
+return;
+}
+
+const bookingData = JSON.parse(localStorage.getItem("bookingData") || "{}");
+
+try{
+
+const response = await fetch(
+"http://localhost:8087/api/coupons/validate?code="+code+
+"&price="+bookingData.price+
+"&centreId=1"+
+"&gender=MALE",
+{ method:"POST" }
+);
+
+if(!response.ok){
+alert("Coupon expired or invalid");
+return;
+}
+
+const discount = Number(await response.text());
+
+document.getElementById("couponAmount").innerText = discount;
+
+payableAmount = bookingData.price - discount;
+
+document.getElementById("payableAmount").innerText = payableAmount;
+
+document.getElementById("payAmount").innerText = payableAmount;
+
+alert("Coupon applied");
+
+}catch(err){
+
+alert("Invalid coupon");
+
+}
+
+}
+
+const coinInput = document.querySelector(".coin-box input[type='number']");
+coinInput.addEventListener("input", applyCoins);
+document.querySelectorAll("input[name='coin']").forEach(r => r.addEventListener("change", applyCoins));
+const coinRadios = document.querySelectorAll("input[name='coin']");
+
+coinRadios.forEach(radio=>{
+radio.addEventListener("change", ()=>{
+
+if(radio.value === "Yes" || radio.checked && radio.parentElement.innerText.trim() === "Yes"){
+
+let coins = Number(coinInput.value || 0);
+
+document.getElementById("coinAmount").innerText = coins;
+
+payableAmount = Number(bookingData.price) - coins;
+
+document.getElementById("payableAmount").innerText = payableAmount;
+
+document.getElementById("payAmount").innerText = payableAmount;
+
+}
 
 });
+});
+
+function applyCoins(){
+
+const bookingData = JSON.parse(localStorage.getItem("bookingData") || "{}");
+
+let price = Number(bookingData.price || 0);
+
+let coins = Number(document.getElementById("coinInput").value || 0);
+
+const coinLimit = Number(localStorage.getItem("coinLimitUsage") || 0);
+
+// coin limit check
+if (coinLimit && coins > coinLimit) {
+    coins = coinLimit;
+}
+
+// price se zyada coin allowed nahi
+if(coins > price){
+    coins = price;
+}
+
+document.getElementById("coinInput").value = coins;
+
+document.getElementById("coinAmount").innerText = coins;
+
+let payable = price - coins;
+
+// minimum ₹1 payment rule
+if(payable < 1){
+    payable = 1;
+}
+
+document.getElementById("payableAmount").innerText = payable;
+document.getElementById("payAmount").innerText = payable;
+
+}

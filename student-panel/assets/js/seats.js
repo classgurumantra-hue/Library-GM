@@ -11,8 +11,18 @@ if(shiftName){
 
 /* Shift ID from localStorage */
 const shiftId = localStorage.getItem("selectedShiftId");
+fetch("http://localhost:8087/api/shifts/" + shiftId)
+.then(res => res.json())
+.then(shift => {
 
-console.log("Shift ID:", shiftId);
+    if (shift.coinLimitUsage) {
+        localStorage.setItem("coinLimitUsage", shift.coinLimitUsage);
+    }
+
+});
+
+console.log("ShiftId:", shiftId);
+
 
 if (!shiftId) {
     alert("Shift not selected");
@@ -44,7 +54,7 @@ window.onload = function () {
                 seatDiv.classList.add("booked");
             }
             else {
-                seatDiv.onclick = () => selectSeat(seatDiv, seat.seatNumber);
+                seatDiv.onclick = () => selectSeat(seatDiv, seat);
             }
 
             seatsDiv.appendChild(seatDiv);
@@ -60,22 +70,24 @@ window.onload = function () {
 };
 
 /* Seat Selection */
-function selectSeat(el, seatNo) {
+function selectSeat(el, seat){
 
     document.querySelectorAll(".seat")
     .forEach(s => s.classList.remove("selected"));
 
     el.classList.add("selected");
 
-    selectedSeat = seatNo;
+    selectedSeat = seat.id;
+console.log("Selected Seat:", selectedSeat);
 
-    localStorage.setItem("selectedSeat", seatNo);
+    localStorage.setItem("selectedSeat", seat.seatNumber);
+    localStorage.setItem("seatNumber", seat.seatNumber);
 
     const bookingData = {
         zone: localStorage.getItem("selectedZoneName") || "-",
         centre: localStorage.getItem("selectedCentreName") || "-",
         time: localStorage.getItem("selectedShiftName") || "-",
-        seat: seatNo,
+        seat: seat.seatNumber,
         mrp: localStorage.getItem("seatMRP") || 0,
         price: localStorage.getItem("finalPrice") || 0,
         discount: localStorage.getItem("discountAmount") || 0
@@ -85,36 +97,53 @@ function selectSeat(el, seatNo) {
 }
 
 /* Payment Page */
-function goPayment() {
+async function goPayment() {
 
     if (!selectedSeat) {
         alert("Please select a seat first");
         return;
     }
 
-    const bookingData = {
-        zone: localStorage.getItem("selectedZoneName") || "-",
-        centre: localStorage.getItem("selectedCentreName") || "-",
-        time: localStorage.getItem("selectedShiftName") || "-",
-        seat: selectedSeat,
-        mrp: localStorage.getItem("seatMRP") || 0,
-        price: localStorage.getItem("finalPrice") || 0,
-        discount: localStorage.getItem("discountAmount") || 0
-    };
+    const shiftId = localStorage.getItem("selectedShiftId");
+  fetch("http://localhost:8087/api/shifts/section/" + localStorage.getItem("selectedSectionId"))
+.then(res => res.json())
+.then(shifts => {
 
-    localStorage.setItem("bookingData", JSON.stringify(bookingData));
+    const shift = shifts.find(s => s.id == shiftId);
 
-    window.location.href = "payment.html";
-}
-
-window.addEventListener("DOMContentLoaded", function () {
-
-    const payBtn = document.querySelector(".proceed-payment");
-
-    if (payBtn) {
-        payBtn.onclick = function () {
-            goPayment();
-        };
+    if (shift && shift.coinLimitUsage) {
+        localStorage.setItem("coinLimitUsage", shift.coinLimitUsage);
     }
 
 });
+    console.log("ShiftId:", shiftId);
+console.log("SeatId:", selectedSeat);
+   
+
+    try {
+
+console.log("Booking API call start");
+const response = await fetch(
+"http://localhost:8087/api/bookings?shiftId=" + shiftId +
+"&seatId=" + selectedSeat +
+"&studentId=" + localStorage.getItem("studentId"),
+{
+method: "POST"
+}
+);
+console.log("Response:", response);
+
+        if (!response.ok) {
+            throw new Error("Booking failed");
+        }
+
+const booking = await response.json();
+
+localStorage.setItem("bookingId", booking.id);
+
+window.location.href = "payment.html";
+
+    } catch (err) {
+        alert(err.message);
+    }
+}

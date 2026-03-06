@@ -1,0 +1,30 @@
+.sidebar {
+  width:260px;
+  background:#0f172a;
+  color:white;
+  padding:20px;
+  transition:.3s;
+}
+
+.logo {
+  font-size:22px;
+  font-weight:600;
+  margin-bottom:30px;
+}
+
+.menu {
+  list-style:none;
+  padding:0;
+}
+
+.menu li {
+  padding:12px;
+  border-radius:8px;
+  cursor:pointer;
+  margin-bottom:8px;
+}
+
+.menu li:hover,
+.menu li.active {
+  background:rgba(255,255,255,.1);
+}

@@ -39,7 +39,7 @@ fetch("components/navbar.html")
 <script>
 document.addEventListener("DOMContentLoaded", function(){
 
-    const zoneId = localStorage.getItem("zoneId");
+    const zoneId = localStorage.getItem("selectedZoneId");
     if(!zoneId) return;
 
     fetch(`http://localhost:8087/api/centres/zone/${zoneId}`)
