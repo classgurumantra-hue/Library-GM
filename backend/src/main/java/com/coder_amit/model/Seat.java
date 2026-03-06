@@ -1,5 +1,6 @@
 package com.coder_amit.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,5 +21,6 @@ public class Seat {
 
     @ManyToOne
     @JoinColumn(name = "shift_id")
+    @JsonIgnore
     private Shift shift;
 }

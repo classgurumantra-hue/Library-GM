@@ -15,7 +15,7 @@ public class SectionService {
     private final CentreRepository centreRepository;
 
     public SectionService(SectionRepository sectionRepository,
-                          CentreRepository centreRepository) {
+            CentreRepository centreRepository) {
         this.sectionRepository = sectionRepository;
         this.centreRepository = centreRepository;
     }
@@ -32,17 +32,21 @@ public class SectionService {
 
     // ✅ Get All Sections
     public List<Section> getAllSections() {
-        return sectionRepository.findAll();
+
+        return sectionRepository.findAll()
+                .stream()
+                .filter(section -> section.getCentre() != null &&
+                        section.getCentre().getZone() != null &&
+                        !section.getCentre().getZone().getDeleted())
+                .toList();
     }
 
     // ✅ Get Sections By Centre ID (Important API)
     public List<Section> getSectionsByCentreId(Long centreId) {
         return sectionRepository.findAll()
                 .stream()
-                .filter(section ->
-                        section.getCentre() != null &&
-                        section.getCentre().getId().equals(centreId)
-                )
+                .filter(section -> section.getCentre() != null &&
+                        section.getCentre().getId().equals(centreId))
                 .toList();
     }
 
@@ -75,5 +79,19 @@ public class SectionService {
     // ✅ Delete Section
     public void deleteSection(Long id) {
         sectionRepository.deleteById(id);
+    }
+
+    // ✅ Block / Unblock Section
+    public Section blockSection(Long id) {
+
+        Section section = getSectionById(id);
+
+        if (section.getActive() == null) {
+            section.setActive(true);
+        }
+
+        section.setActive(!section.getActive());
+
+        return sectionRepository.save(section);
     }
 }

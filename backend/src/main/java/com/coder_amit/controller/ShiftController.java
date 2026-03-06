@@ -1,4 +1,5 @@
 package com.coder_amit.controller;
+
 import com.coder_amit.model.Shift;
 import com.coder_amit.service.ShiftService;
 import org.springframework.web.bind.annotation.*;
@@ -6,6 +7,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/shifts")
+@CrossOrigin
 public class ShiftController {
     private final ShiftService shiftService;
 
@@ -14,9 +16,9 @@ public class ShiftController {
     }
 
     @GetMapping("/section/{sectionId}")
-public List<Shift> getShiftsBySectionId(@PathVariable Long sectionId) {
-    return shiftService.getShiftsBySectionId(sectionId);
-}
+    public List<Shift> getShiftsBySectionId(@PathVariable Long sectionId) {
+        return shiftService.getShiftsBySectionId(sectionId);
+    }
 
     @PostMapping("/{sectionId}")
     public Shift createShift(@RequestBody Shift shift, @PathVariable Long sectionId) {
@@ -26,6 +28,11 @@ public List<Shift> getShiftsBySectionId(@PathVariable Long sectionId) {
     @GetMapping
     public List<Shift> getAllShifts() {
         return shiftService.getAllShifts();
+    }
+
+    @PutMapping("/block/{id}")
+    public Shift blockShift(@PathVariable Long id) {
+        return shiftService.blockShift(id);
     }
 
     @GetMapping("/{id}")

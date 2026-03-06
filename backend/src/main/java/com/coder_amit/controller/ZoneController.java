@@ -1,4 +1,5 @@
 package com.coder_amit.controller;
+
 import com.coder_amit.model.Zone;
 import com.coder_amit.service.ZoneService;
 import org.springframework.web.bind.annotation.*;
@@ -36,5 +37,10 @@ public class ZoneController {
     @DeleteMapping("/{id}")
     public void deleteZone(@PathVariable Long id) {
         zoneService.deleteZone(id);
+    }
+
+    @PutMapping("/block/{id}")
+    public Zone toggleZoneStatus(@PathVariable Long id) {
+        return zoneService.toggleZoneStatus(id);
     }
 }

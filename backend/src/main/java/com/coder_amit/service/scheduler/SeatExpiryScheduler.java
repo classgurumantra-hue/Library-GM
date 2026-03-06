@@ -1,0 +1,45 @@
+package com.coder_amit.scheduler;
+
+import com.coder_amit.model.Booking;
+import com.coder_amit.model.Seat;
+import com.coder_amit.repository.BookingRepository;
+import com.coder_amit.repository.SeatRepository;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Component
+public class SeatExpiryScheduler {
+
+    private final BookingRepository bookingRepository;
+    private final SeatRepository seatRepository;
+
+    public SeatExpiryScheduler(BookingRepository bookingRepository,
+            SeatRepository seatRepository) {
+        this.bookingRepository = bookingRepository;
+        this.seatRepository = seatRepository;
+    }
+
+    @Scheduled(cron = "0 0 2 * * ?")
+    public void expireOldBookings() {
+
+        LocalDateTime expiryTime = LocalDateTime.now().minusDays(30);
+
+        List<Booking> expiredBookings = bookingRepository.findByBookingTimeBefore(expiryTime);
+
+        for (Booking booking : expiredBookings) {
+
+            Seat seat = booking.getSeat();
+
+            if ("BOOKED".equalsIgnoreCase(seat.getStatus())) {
+
+                seat.setStatus("AVAILABLE");
+                seatRepository.save(seat);
+            }
+        }
+
+        System.out.println("Expired seats released: " + expiredBookings.size());
+    }
+}

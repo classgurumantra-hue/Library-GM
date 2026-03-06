@@ -1,9 +1,11 @@
 package com.coder_amit.model;
+
 import com.coder_amit.model.Centre;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDate;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Getter
 @Setter
@@ -16,13 +18,19 @@ public class Payment {
     private Long id;
 
     private Double amount;
-    
+
     private String status;
-    
+
     @Column(name = "payment_date")
     private LocalDate paymentDate;
 
-    @ManyToOne
-    @JoinColumn(name = "centre_id")
-    private Centre centre;
+    @OneToOne(mappedBy = "payment")
+    @JsonIgnore
+    private Booking booking;
+
+    @Column(name = "razorpay_order_id")
+    private String razorpayOrderId;
+
+    @Column(name = "razorpay_payment_id")
+    private String razorpayPaymentId;
 }

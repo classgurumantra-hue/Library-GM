@@ -1,4 +1,7 @@
 package com.coder_amit.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.coder_amit.model.Centre;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -25,12 +28,19 @@ public class Section {
 
     private Integer numberOfRows;
     private Integer numberOfColumns;
-    private Boolean active;
+
+    @Column(name = "active")
+    private Boolean active = true;
 
     @Column(name = "start_date")
     private LocalDate startDate;
 
     @ManyToOne
     @JoinColumn(name = "centre_id", nullable = false)
+    @JsonIgnoreProperties({ "sections" })
     private Centre centre;
+
+    @OneToMany(mappedBy = "section", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private java.util.List<Shift> shifts;
 }

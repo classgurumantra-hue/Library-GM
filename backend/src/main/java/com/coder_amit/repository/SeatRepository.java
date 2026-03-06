@@ -7,4 +7,6 @@ import java.util.List;
 public interface SeatRepository extends JpaRepository<Seat, Long> {
 
     List<Seat> findByShiftIdOrderBySeatNumberAsc(Long shiftId);
+
+    void deleteByShiftId(Long shiftId);
 }

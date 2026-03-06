@@ -1,5 +1,6 @@
 package com.coder_amit.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,6 +23,9 @@ public class Shift {
     private LocalTime endTime;
 
     private Double mrp;
+
+    @Column(nullable = false)
+    private Boolean active = true;
 
     @Column(name = "discount_value")
     private Double discountValue;
@@ -53,4 +57,7 @@ public class Shift {
     @ManyToOne
     @JoinColumn(name = "section_id", nullable = false)
     private Section section;
+
+    @OneToMany(mappedBy = "shift", cascade = CascadeType.ALL, orphanRemoval = true)
+    private java.util.List<Seat> seats;
 }

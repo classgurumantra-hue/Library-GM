@@ -8,4 +8,6 @@ public interface SectionRepository extends JpaRepository<Section, Long> {
 
     List<Section> findByCentreId(Long centreId);
 
+    void deleteByCentreId(Long centreId);
+
 }

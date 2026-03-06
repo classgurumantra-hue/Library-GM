@@ -1,4 +1,5 @@
 package com.coder_amit.controller;
+
 import com.coder_amit.model.Section;
 import com.coder_amit.service.SectionService;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +25,9 @@ public class SectionController {
     }
 
     @GetMapping("/centre/{centreId}")
-public List<Section> getSectionsByCentreId(@PathVariable Long centreId) {
-    return sectionService.getSectionsByCentreId(centreId);
-}
+    public List<Section> getSectionsByCentreId(@PathVariable Long centreId) {
+        return sectionService.getSectionsByCentreId(centreId);
+    }
 
     @GetMapping("/{id}")
     public Section getSectionById(@PathVariable Long id) {
@@ -34,12 +35,18 @@ public List<Section> getSectionsByCentreId(@PathVariable Long centreId) {
     }
 
     @PutMapping("/{id}/{centreId}")
-    public Section updateSection(@PathVariable Long id, @RequestBody Section sectionDetails, @PathVariable Long centreId) {
+    public Section updateSection(@PathVariable Long id, @RequestBody Section sectionDetails,
+            @PathVariable Long centreId) {
         return sectionService.updateSection(id, sectionDetails, centreId);
     }
 
     @DeleteMapping("/{id}")
     public void deleteSection(@PathVariable Long id) {
         sectionService.deleteSection(id);
+    }
+
+    @PutMapping("/block/{id}")
+    public Section blockSection(@PathVariable Long id) {
+        return sectionService.blockSection(id);
     }
 }

@@ -1,5 +1,6 @@
 package com.coder_amit.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,7 +25,14 @@ public class Centres {
 
     private String description;
 
+    @Column(name = "active")
+    private Boolean active = true;
+
     @ManyToOne
     @JoinColumn(name = "zone_id", nullable = false)
     private Zone zone;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "centre", cascade = CascadeType.ALL, orphanRemoval = true)
+    private java.util.List<Section> sections;
 }

@@ -24,7 +24,13 @@ public class Centre {
 
     private String description;
 
+    @Column(name = "active")
+    private Boolean active = true;
+
     @ManyToOne
     @JoinColumn(name = "zone_id", nullable = false)
     private Zone zone;
+
+    @OneToMany(mappedBy = "centre", cascade = CascadeType.ALL, orphanRemoval = true)
+    private java.util.List<Section> sections;
 }
