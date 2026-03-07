@@ -18,9 +18,18 @@ public class Seat {
     private Integer seatNumber;
 
     private String status; // AVAILABLE / BOOKED
+    private java.time.LocalDateTime lockTime;
 
     @ManyToOne
     @JoinColumn(name = "shift_id")
     @JsonIgnore
     private Shift shift;
+
+    public java.time.LocalDateTime getLockTime() {
+        return lockTime;
+    }
+
+    public void setLockTime(java.time.LocalDateTime lockTime) {
+        this.lockTime = lockTime;
+    }
 }

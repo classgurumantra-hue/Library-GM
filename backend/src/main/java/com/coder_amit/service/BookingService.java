@@ -25,11 +25,16 @@ public class BookingService {
     public Booking createBooking(Long shiftId, Long seatId, Long studentId) {
 
         Seat seat = seatRepository.findById(seatId)
+
                 .orElseThrow(() -> new RuntimeException("Seat not found"));
 
-        if ("BOOKED".equalsIgnoreCase(seat.getStatus())) {
-            throw new RuntimeException("Seat already booked");
+        if ("BOOKED".equalsIgnoreCase(seat.getStatus())
+                || "HOLD".equalsIgnoreCase(seat.getStatus())) {
+            throw new RuntimeException("Seat not available");
         }
+        seat.setStatus("HOLD");
+        seat.setLockTime(java.time.LocalDateTime.now());
+        seatRepository.save(seat);
 
         Shift shift = shiftRepository.findById(shiftId)
                 .orElseThrow(() -> new RuntimeException("Shift not found"));

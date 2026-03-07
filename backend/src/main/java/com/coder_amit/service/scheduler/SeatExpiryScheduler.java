@@ -42,4 +42,26 @@ public class SeatExpiryScheduler {
 
         System.out.println("Expired seats released: " + expiredBookings.size());
     }
+
+    @Scheduled(fixedRate = 60000)
+    public void releaseHeldSeats() {
+
+        List<Seat> seats = seatRepository.findAll();
+
+        for (Seat seat : seats) {
+
+            if ("HOLD".equalsIgnoreCase(seat.getStatus()) && seat.getLockTime() != null) {
+
+                LocalDateTime expiryTime = seat.getLockTime().plusMinutes(5);
+
+                if (LocalDateTime.now().isAfter(expiryTime)) {
+
+                    seat.setStatus("AVAILABLE");
+                    seat.setLockTime(null);
+
+                    seatRepository.save(seat);
+                }
+            }
+        }
+    }
 }

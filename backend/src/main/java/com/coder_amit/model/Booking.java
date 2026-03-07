@@ -27,6 +27,7 @@ public class Booking {
     private Shift shift;
 
     private Double amount;
+    private Double coinsUsed;
 
     private String paymentStatus;
 

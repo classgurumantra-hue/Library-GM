@@ -1,5 +1,6 @@
 package com.coder_amit.repository;
 
+import org.springframework.data.jpa.repository.Query;
 import com.coder_amit.model.Booking;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
@@ -20,4 +21,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     List<Booking> findBySeat_Shift_Section_Id(Long sectionId);
 
     List<Booking> findBySeat_Shift_Id(Long shiftId);
+
+    @Query("SELECT b FROM Booking b WHERE b.studentId = :studentId AND b.shift.section.centre.id = :centreId ORDER BY b.bookingTime DESC")
+    List<Booking> findLatestBooking(Long studentId, Long centreId);
 }
