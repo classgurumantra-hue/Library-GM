@@ -1,6 +1,11 @@
+x
+^^^^^^^^^^^^X
+
 document.addEventListener("DOMContentLoaded", function () {
   
   const bookingData = JSON.parse(localStorage.getItem("bookingData") || "{}");
+
+
 
 const shiftId = localStorage.getItem("selectedShiftId");
 const userId = localStorage.getItem("studentId");
@@ -31,14 +36,14 @@ if(Number(bookingData.price) < 100){
 alert("Coupon not applicable for this price");
 }
 
-  let payableAmount = Number(bookingData.finalPrice || bookingData.price || 0);
+  let payableAmount = Number(bookingData.price || 0);
   const coinInput = document.querySelector(".coin-box input[type='number']");
-  document.getElementById("payAmount").innerText = bookingData.finalPrice || bookingData.price || 0;
+  document.getElementById("payAmount").innerText = bookingData.price || 0;
 
-  document.getElementById("subtotalAmount").innerText = bookingData.finalPrice || bookingData.price || 0;
+  document.getElementById("subtotalAmount").innerText = bookingData.price || 0;
   document.getElementById("couponAmount").innerText = 0;
   document.getElementById("coinAmount").innerText = 0;
-  document.getElementById("payableAmount").innerText = bookingData.finalPrice || bookingData.price || 0;
+  document.getElementById("payableAmount").innerText = bookingData.price || 0;
 
   const bookingId = localStorage.getItem("bookingId");
 
@@ -139,16 +144,13 @@ return;
 }
 
 const bookingData = JSON.parse(localStorage.getItem("bookingData") || "{}");
-const studentId = localStorage.getItem("studentId");
-const centreId = localStorage.getItem("centreId");
-const shiftId = localStorage.getItem("selectedShiftId");
 
 try{
 
 const response = await fetch(
 "http://localhost:8087/api/coupons/validate?code="+code+
 "&price="+bookingData.price+
-"&centreId="+centreId+
+"&centreId=1"+
 "&gender=MALE",
 { method:"POST" }
 );
@@ -162,8 +164,7 @@ const discount = Number(await response.text());
 
 document.getElementById("couponAmount").innerText = discount;
 
-let coins = Number(document.getElementById("coinAmount").innerText || 0);
-payableAmount = bookingData.price - discount - coins;
+payableAmount = bookingData.price - discount;
 
 document.getElementById("payableAmount").innerText = payableAmount;
 
@@ -192,8 +193,8 @@ if(radio.value === "Yes" || radio.checked && radio.parentElement.innerText.trim(
 let coins = Number(coinInput.value || 0);
 
 document.getElementById("coinAmount").innerText = coins;
-let afterCoupon = Number(document.getElementById("payableAmount").innerText);
-payableAmount = afterCoupon - coins;
+
+payableAmount = Number(bookingData.price) - coins;
 
 document.getElementById("payableAmount").innerText = payableAmount;
 
@@ -207,7 +208,8 @@ document.getElementById("payAmount").innerText = payableAmount;
 function applyCoins(){
 
 const bookingData = JSON.parse(localStorage.getItem("bookingData") || "{}");
-let price = Number(bookingData.price || 0) - Number(document.getElementById("couponAmount").innerText || 0);
+
+let price = Number(bookingData.price || 0);
 
 let coins = Number(document.getElementById("coinInput").value || 0);
 

@@ -1,4 +1,7 @@
 let selectedSeat = null;
+let selectedDuration = null;
+
+let basePrice = 0;
 
 const seatsDiv = document.getElementById("seats");
 const info = document.getElementById("info");
@@ -83,15 +86,16 @@ console.log("Selected Seat:", selectedSeat);
     localStorage.setItem("selectedSeat", seat.seatNumber);
     localStorage.setItem("seatNumber", seat.seatNumber);
 
-    const bookingData = {
-        zone: localStorage.getItem("selectedZoneName") || "-",
-        centre: localStorage.getItem("selectedCentreName") || "-",
-        time: localStorage.getItem("selectedShiftName") || "-",
-        seat: seat.seatNumber,
-        mrp: localStorage.getItem("seatMRP") || 0,
-        price: localStorage.getItem("finalPrice") || 0,
-        discount: localStorage.getItem("discountAmount") || 0
-    };
+   const bookingData = {
+    zone: localStorage.getItem("selectedZoneName") || "-",
+    centre: localStorage.getItem("selectedCentreName") || "-",
+    centreId: localStorage.getItem("centreId") || 0,
+    time: localStorage.getItem("selectedShiftName") || "-",
+    seat: seat.seatNumber,
+    mrp: localStorage.getItem("seatMRP") || 0,
+    price: localStorage.getItem("finalPrice") || 0,
+    discount: localStorage.getItem("discountAmount") || 0
+};
 
     localStorage.setItem("bookingData", JSON.stringify(bookingData));
 }
@@ -146,4 +150,204 @@ window.location.href = "payment.html";
     } catch (err) {
         alert(err.message);
     }
+}
+async function loadShiftDetails(){
+
+const shiftId = localStorage.getItem("selectedShiftId");
+
+if(!shiftId){
+console.log("Shift id missing");
+return;
+}
+
+try{
+
+const res = await fetch("http://localhost:8087/api/shifts/" + shiftId);
+
+const shift = await res.json();
+
+console.log("SHIFT DATA", shift);
+
+document.getElementById("shiftName").innerText = shift.name;
+
+document.getElementById("shiftStart").innerText = shift.startTime;
+
+document.getElementById("shiftDuration").innerText = "Custom Package";
+
+document.getElementById("shiftPrice").innerText = shift.price;
+document.getElementById("availableCoins").innerText = shift.coinLimitUsage;
+
+/* discount UI only */
+
+document.getElementById("d90").innerText =
+shift.discount90Days ? shift.discount90Days : 0;
+
+document.getElementById("d180").innerText =
+shift.discount180Days ? shift.discount180Days : 0;
+
+document.getElementById("d270").innerText =
+shift.discount270Days ? shift.discount270Days : 0;
+
+document.getElementById("d360").innerText =
+shift.discount360Days ? shift.discount360Days : 0;
+
+basePrice = shift.price;
+
+}catch(err){
+
+console.log(err);
+
+}
+}
+function openPackage(){
+
+document.getElementById("packageModal").style.display = "flex";
+
+loadShiftDetails();
+
+}
+function selectDuration(days){
+
+selectedDuration = days;
+
+console.log("Selected Duration:", days);
+
+localStorage.setItem("selectedDuration", days);
+
+/* remove old highlight */
+
+document.querySelectorAll(".duration-buttons button")
+.forEach(btn => btn.classList.remove("active-duration"));
+
+/* highlight selected */
+
+document.querySelectorAll(".duration-buttons button")
+.forEach(btn => {
+if(btn.innerText == days){
+btn.classList.add("active-duration");
+}
+});
+
+/* price calculation */
+
+let price = (basePrice / 30) * days;
+
+document.getElementById("totalPrice").innerText = price;
+
+document.getElementById("couponPrice").innerText = 0;
+document.getElementById("coinPrice").innerText = 0;
+document.getElementById("coinInput").value = "";
+document.getElementById("couponCode").value = "";
+document.getElementById("totalPrice").innerText = price + 30;
+
+}
+
+async function applyCoupon(){
+
+const code = document.getElementById("couponCode").value;
+
+if(!code){
+alert("Enter coupon code");
+return;
+}
+
+const centreId = localStorage.getItem("centreId");
+
+try{
+
+const response = await fetch(
+"http://localhost:8087/api/coupons/validate?code="+code+
+"&price="+document.getElementById("totalPrice").innerText+
+"&centreId="+centreId+
+"&gender=MALE",
+{ method:"POST" }
+);
+
+if(!response.ok){
+alert("Invalid or expired coupon");
+return;
+}
+
+const discount = Number(await response.text());
+
+document.getElementById("couponPrice").innerText = discount;
+
+let total = basePrice - discount + 30;
+
+document.getElementById("totalPrice").innerText = total;
+
+alert("Coupon applied");
+
+}catch(err){
+
+console.log(err);
+alert("Coupon error");
+
+}
+}
+
+document.getElementById("coinInput").addEventListener("input", applyCoins);
+
+function applyCoins(){
+
+let coins = Number(document.getElementById("coinInput").value);
+
+let available = Number(document.getElementById("availableCoins").innerText);
+
+let maxAllowed = basePrice * 0.30;
+
+if(coins > maxAllowed){
+coins = maxAllowed;
+}
+
+if(coins > available){
+coins = available;
+}
+
+document.getElementById("coinPrice").innerText = coins;
+
+let coupon = Number(document.getElementById("couponPrice").innerText);
+
+let total = basePrice - coupon - coins + 30;
+
+if(total < 0){
+total = 0;
+}
+
+document.getElementById("totalPrice").innerText = total;
+
+}
+
+function checkSeat(){
+
+if(!selectedSeat){
+alert("Please select a seat first");
+return;
+}
+
+openPackage();
+
+}
+
+function purchaseSeat(){
+
+let duration = selectedDuration || 30;
+
+let coupon = Number(document.getElementById("couponPrice").innerText);
+let coins = Number(document.getElementById("coinPrice").innerText);
+let total = Number(document.getElementById("totalPrice").innerText);
+
+let bookingData = JSON.parse(localStorage.getItem("bookingData") || "{}");
+
+bookingData.duration = duration;
+bookingData.couponDiscount = coupon;
+bookingData.coinUsed = coins;
+bookingData.finalPrice = total;
+
+localStorage.setItem("bookingData", JSON.stringify(bookingData));
+
+localStorage.setItem("finalPayable", total);
+
+window.location.href = "payment.html";
+
 }

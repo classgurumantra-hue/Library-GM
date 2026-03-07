@@ -743,3 +743,119 @@ body {
   padding-top: 90px;
 }
 
+/* PACKAGE MODAL */
+
+.package-modal{
+position: fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background: rgba(0,0,0,0.5);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:9999;
+}
+
+.package-box{
+background:#fff;
+width:90%;
+max-width:420px;
+max-height:90vh;
+overflow-y:auto;
+border-radius:12px;
+padding:20px;
+box-shadow:0 10px 30px rgba(0,0,0,0.25);
+}
+
+.package-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:10px;
+}
+
+.package-header span{
+cursor:pointer;
+font-size:20px;
+}
+
+.duration-buttons{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+margin-top:10px;
+}
+
+.duration-buttons button{
+
+background:#6c63ff;
+border:none;
+color:white;
+padding:6px 14px;
+border-radius:6px;
+cursor:pointer;
+font-size:14px;
+
+}
+
+.duration-buttons button:hover{
+background:#4f46e5;
+}
+
+.purchase-btn{
+
+width:100%;
+margin-top:15px;
+padding:10px;
+border:none;
+background:#1e88e5;
+color:white;
+border-radius:6px;
+cursor:pointer;
+font-size:16px;
+
+}
+
+.duration-buttons{
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+margin-top:10px;
+}
+
+.duration-buttons button{
+flex:1 0 60px;
+background:#6c63ff;
+border:none;
+color:white;
+padding:6px 10px;
+border-radius:6px;
+cursor:pointer;
+font-size:13px;
+}
+@media (max-width:480px){
+
+.package-box{
+width:95%;
+padding:15px;
+}
+
+.duration-buttons button{
+flex:1 0 55px;
+font-size:12px;
+padding:6px;
+}
+
+.purchase-btn{
+font-size:14px;
+padding:10px;
+}
+
+}
+
+.active-duration{
+background:#ff9800 !important;
+color:white;
+}

@@ -19,7 +19,7 @@
 
     <div class="seats-grid" id="seats"></div>
 
-    <button class="btn" onclick="goPayment()">Proceed to Payment</button>
+   <button class="btn" onclick="checkSeat()">Proceed</button>
   </div>
 </div>
 
@@ -30,7 +30,99 @@ fetch("components/navbar.html")
     document.getElementById("navbar").innerHTML = data;
   });
 </script>
+<div id="packageModal" class="package-modal">
 
+<div class="package-box">
+
+<div class="package-header">
+<h3>Select Package</h3>
+<span onclick="closePackage()">✖</span>
+</div>
+
+<div class="package-body">
+
+<h4 id="shiftName"></h4>
+
+<p>Start Time : <span id="shiftStart"></span></p>
+
+<p>Duration : <span id="shiftDuration"></span></p>
+
+<p>Price : ₹<span id="shiftPrice"></span></p>
+
+<hr>
+
+<h5>Select Duration</h5>
+
+<div class="duration-buttons">
+
+<button onclick="selectDuration(30)">30</button>
+<button onclick="selectDuration(60)">60</button>
+<button onclick="selectDuration(90)">90</button>
+<button onclick="selectDuration(120)">120</button>
+<button onclick="selectDuration(180)">180</button>
+<button onclick="selectDuration(210)">210</button>
+<button onclick="selectDuration(240)">240</button>
+<button onclick="selectDuration(270)">270</button>
+<button onclick="selectDuration(300)">300</button>
+<button onclick="selectDuration(330)">330</button>
+<button onclick="selectDuration(360)">360</button>
+
+</div>
+
+<hr>
+
+<h5>Discount Plans</h5>
+
+<p>90 Days : <span id="d90">--</span>%</p>
+<p>180 Days : <span id="d180">--</span>%</p>
+<p>270 Days : <span id="d270">--</span>%</p>
+<p>360 Days : <span id="d360">--</span>%</p>
+
+<hr>
+
+<h5>Coupon</h5>
+
+<input type="text" id="couponCode" placeholder="Enter Coupon">
+
+<button onclick="applyCoupon()">Apply</button>
+
+<p>After Coupon : ₹<span id="couponPrice">0</span></p>
+
+<hr>
+
+<h5>Coins</h5>
+
+<input type="number" id="coinInput" placeholder="Enter Coins">
+
+<p>Available Coins : ₹<span id="availableCoins">0</span></p>
+
+<p>After Coins : ₹<span id="coinPrice">0</span></p>
+
+<hr>
+
+<p>Admission Fee : ₹<span id="admissionFee">30</span></p>
+
+<h4>Total : ₹<span id="totalPrice">0</span></h4>
+
+<button onclick="purchaseSeat()" class="purchase-btn">
+Purchase Now
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+function openPackage(){
+document.getElementById("packageModal").style.display="flex";
+}
+
+function closePackage(){
+document.getElementById("packageModal").style.display="none";
+}
+</script>
 <script src="assets/js/main.js"></script>
 <script src="assets/js/seats.js"></script>
 
