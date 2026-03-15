@@ -52,11 +52,7 @@
 </div>
 
 <!-- Payment Methods -->
-<h5>Select Payment</h5>
 
-<div class="method active">UPI (GPay / PhonePe)</div>
-<div class="method">Debit / Credit Card</div>
-<div class="method">Wallet Balance</div>
 
 <button class="pay-btn proceed-payment">
     Pay ₹<span id="payAmount">0</span>
@@ -73,7 +69,7 @@ document.getElementById("navbar").innerHTML = data;
 });
 </script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<script src="assets/js/payment.js"></script>
+<script src="assets/js/payment.js" defer></script>
 
 </body>
 </html>

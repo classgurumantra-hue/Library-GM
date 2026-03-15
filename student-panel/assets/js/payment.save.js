@@ -1,63 +1,31 @@
-async function loadPrice(){
 
-const shiftId = localStorage.getItem("selectedShiftId");
 
-const res = await fetch("http://localhost:8087/api/shifts/" + shiftId);
-const shift = await res.json();
-
-console.log("SHIFT FROM API:", shift);
-
-const mrp = shift.mrp;
-const price = shift.price;
-
-document.getElementById("mrp").innerText = mrp;
-document.getElementById("price").innerText = price;
-
-document.getElementById("subtotal").innerText = price;
-
-const total = price + 30;
-
-document.getElementById("payAmount").innerText = total;
-
-}
-
-document.addEventListener("DOMContentLoaded", async function () {
+document.addEventListener("DOMContentLoaded", function () {
   
   const bookingData = JSON.parse(localStorage.getItem("bookingData") || "{}");
-  console.log("BOOKING DATA:", bookingData);
-  const role = localStorage.getItem("role");
 
-if(role === "VENDOR" && (!bookingData || Object.keys(bookingData).length === 0)){
-    window.location.href = "seats.html";
-}
 
-const shiftId = bookingData.shiftId || localStorage.getItem("selectedShiftId");
-if (!shiftId || shiftId === "null") {
-    alert("Shift missing. Please select seat again.");
-    window.location.href = "seats.html";
-    return;
-}
-const userId = localStorage.getItem("studentId") || localStorage.getItem("vendorStudentId");
-const centreId = bookingData.centreId || localStorage.getItem("selectedCentreId");
+
+const shiftId = localStorage.getItem("selectedShiftId");
+const userId = localStorage.getItem("studentId");
+const centreId = bookingData.centreId;
 
 fetch(
-"http://localhost:8087/api/payments/calculate" +
-"?shiftId=" + shiftId +
+"http://localhost:8087/api/payments/calculate?shiftId=" + shiftId +
 "&userId=" + userId +
 "&centreId=" + centreId +
 "&gender=MALE",
-{ method: "POST" }
+{ method:"POST" }
 )
 .then(res => res.json())
 .then(data => {
 
-document.getElementById("subtotalAmount").innerText =
-bookingData.finalPrice || data.shiftPrice;
+document.getElementById("subtotalAmount").innerText = data.shiftPrice;
 document.getElementById("couponAmount").innerText = data.couponDiscount;
 document.getElementById("coinAmount").innerText = data.coinUsed;
 
-document.getElementById("payableAmount").innerText = bookingData.finalPrice || data.finalPrice;
-document.getElementById("payAmount").innerText = bookingData.finalPrice || data.finalPrice;
+document.getElementById("payableAmount").innerText = data.finalPrice;
+document.getElementById("payAmount").innerText = data.finalPrice;
 
 })
 .catch(err=>{
@@ -67,48 +35,16 @@ if(Number(bookingData.price) < 100){
 alert("Coupon not applicable for this price");
 }
 
-  let payableAmount = Number(bookingData.finalPrice || bookingData.price || 0);
+  let payableAmount = Number(bookingData.price || 0);
   const coinInput = document.querySelector(".coin-box input[type='number']");
-  document.getElementById("payAmount").innerText = bookingData.finalPrice || bookingData.price || 0;
+  document.getElementById("payAmount").innerText = bookingData.price || 0;
 
-  document.getElementById("subtotalAmount").innerText = bookingData.finalPrice || bookingData.price || 0;
+  document.getElementById("subtotalAmount").innerText = bookingData.price || 0;
   document.getElementById("couponAmount").innerText = 0;
   document.getElementById("coinAmount").innerText = 0;
-  document.getElementById("payableAmount").innerText = bookingData.finalPrice || bookingData.price || 0;
+  document.getElementById("payableAmount").innerText = bookingData.price || 0;
 
   const bookingId = localStorage.getItem("bookingId");
-
-  // ⭐ Vendor booking create if not exists
-
-if(role === "VENDOR" && !bookingId){
-
-const seatId = localStorage.getItem("selectedSeatId") || localStorage.getItem("selectedSeat");
-const vendorId = localStorage.getItem("vendorId");
-
-try{
-
-const res = await fetch(
-"http://localhost:8087/api/bookings/vendor"
-+ "?shiftId=" + shiftId
-+ "&seatId=" + seatId
-+ "&studentId=" + userId
-+ "&vendorId=" + vendorId,
-{ method:"POST" }
-);
-
-const booking = await res.json();
-
-localStorage.setItem("bookingId", booking.id);
-
-console.log("Vendor booking created:", booking.id);
-
-}catch(err){
-console.log(err);
-alert("Vendor booking failed");
-}
-
-}
-  
 
   const sub = document.querySelector(".sub");
   const summary = document.querySelector(".booking-summary");
@@ -124,7 +60,7 @@ alert("Vendor booking failed");
             <span>Time</span><span>${bookingData.time || "-"}</span>
             <span>Seat</span><span>${bookingData.seat || "-"}</span>
             <span>MRP</span><span>₹${bookingData.mrp || 0}</span>
-            <span>Price</span><span>₹${bookingData.finalPrice || bookingData.price || 0}</span>
+            <span>Price</span><span>₹${bookingData.price || 0}</span>
             <span>Discount</span><span class="green">-₹${bookingData.discount || 0}</span>
         `;
   }
@@ -132,10 +68,9 @@ alert("Vendor booking failed");
   const payBtn = document.querySelector(".pay-btn");
 
   if (payBtn) {
-   payBtn.onclick = async function () {
-
- const payable = Math.round(Number(document.getElementById("payAmount").innerText));
- const amount = payable;
+    payBtn.onclick = async function () {
+      const amount = payableAmount;
+      const payable = Math.round(Number(document.getElementById("payAmount").innerText));
       if (!bookingId) {
         alert("Booking ID missing!");
         return;
@@ -145,7 +80,7 @@ alert("Vendor booking failed");
         // 1️⃣ Create order from backend
         
 
-       console.log("PAYABLE SENT TO BACKEND:", payable);
+        console.log("PAYABLE SENT TO BACKEND:", payableAmount);
 
 const orderResponse = await fetch(
   "http://localhost:8087/api/payments/create-order?amount=" + payable,
@@ -208,21 +143,13 @@ return;
 }
 
 const bookingData = JSON.parse(localStorage.getItem("bookingData") || "{}");
-console.log("BOOKING DATA PAYMENT PAGE:", bookingData);
-
-if(!bookingData || Object.keys(bookingData).length === 0){
-    alert("Booking data missing. Please select seat again.");
-}
-const shiftId = bookingData.shiftId || localStorage.getItem("selectedShiftId");
-const centreId = bookingData.centreId || localStorage.getItem("centreId");
-const userId = localStorage.getItem("studentId") || 0;
 
 try{
 
 const response = await fetch(
 "http://localhost:8087/api/coupons/validate?code="+code+
-"&price="+(bookingData.finalPrice || bookingData.price)+
-"&centreId="+centreId+
+"&price="+bookingData.price+
+"&centreId=1"+
 "&gender=MALE",
 { method:"POST" }
 );
@@ -236,8 +163,7 @@ const discount = Number(await response.text());
 
 document.getElementById("couponAmount").innerText = discount;
 
-let coins = Number(document.getElementById("coinAmount").innerText || 0);
-payableAmount = (bookingData.finalPrice || bookingData.price) - discount - coins;
+payableAmount = bookingData.price - discount;
 
 document.getElementById("payableAmount").innerText = payableAmount;
 
@@ -266,8 +192,8 @@ if(radio.value === "Yes" || radio.checked && radio.parentElement.innerText.trim(
 let coins = Number(coinInput.value || 0);
 
 document.getElementById("coinAmount").innerText = coins;
-let afterCoupon = Number(document.getElementById("payableAmount").innerText);
-payableAmount = afterCoupon - coins;
+
+payableAmount = Number(bookingData.price) - coins;
 
 document.getElementById("payableAmount").innerText = payableAmount;
 
@@ -281,7 +207,8 @@ document.getElementById("payAmount").innerText = payableAmount;
 function applyCoins(){
 
 const bookingData = JSON.parse(localStorage.getItem("bookingData") || "{}");
-let price = Number(bookingData.finalPrice || bookingData.price || 0) - Number(document.getElementById("couponAmount").innerText || 0);
+
+let price = Number(bookingData.price || 0);
 
 let coins = Number(document.getElementById("coinInput").value || 0);
 
@@ -293,17 +220,15 @@ if (coinLimit && coins > coinLimit) {
 }
 
 // price se zyada coin allowed nahi
-let maxPrice = (bookingData.finalPrice || bookingData.price);
-
-if(coins > maxPrice){
-    coins = maxPrice;
+if(coins > price){
+    coins = price;
 }
 
 document.getElementById("coinInput").value = coins;
 
 document.getElementById("coinAmount").innerText = coins;
 
-let payable = (bookingData.finalPrice || bookingData.price) - coins;
+let payable = price - coins;
 
 // minimum ₹1 payment rule
 if(payable < 1){

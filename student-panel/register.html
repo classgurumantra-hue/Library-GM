@@ -166,54 +166,54 @@ bootstrap.Modal.getInstance(document.getElementById('tcModal')).hide();
 </script>
 
 <script>
-async function signup(){
+// async function signup(){
 
-    try{
+//     try{
 
-        let fullname = document.getElementById("fullname").value;
-        let mobile = document.getElementById("mobile").value;
-        let email = document.getElementById("email").value;
-        let password = document.getElementById("password").value;
-        let confirmPassword = document.getElementById("confirmPassword").value;
-        let gender = document.getElementById("gender").value;
-        let referral = document.getElementById("referral").value;
+//         let fullname = document.getElementById("fullname").value;
+//         let mobile = document.getElementById("mobile").value;
+//         let email = document.getElementById("email").value;
+//         let password = document.getElementById("password").value;
+//         let confirmPassword = document.getElementById("confirmPassword").value;
+//         let gender = document.getElementById("gender").value;
+//         let referral = document.getElementById("referral").value;
 
       
 
-        let response = await fetch("http://localhost:8087/api/auth/signup",{
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
-            },
-            body:JSON.stringify({
-                fullname,
-                mobile,
-                username: email,
-                email,
-                password,
-                gender,
-                referralCode: referral,
-                role:"STUDENT"
-            })
-        });
+//         let response = await fetch("http://localhost:8087/api/auth/signup",{
+//             method:"POST",
+//             headers:{
+//                 "Content-Type":"application/json"
+//             },
+//           body:JSON.stringify({
+//     fullname,
+//     mobile,
+//     username: email,
+//     email,
+//     password,
+//     gender,
+//     referredBy: referral,
+//     role:"STUDENT"
+// })
+//         });
 
-        let text = await response.text();
+//         let text = await response.text();
 
-        console.log(text);
+//         console.log(text);
 
-        if(response.ok){
-            alert("Signup Success 🎉");
-            window.location.href="login.html";
-        }
-        else{
-            alert(text);
-        }
+//         if(response.ok){
+//             alert("Signup Success 🎉");
+//             window.location.href="login.html";
+//         }
+//         else{
+//             alert(text);
+//         }
 
-    }catch(err){
-        console.error(err);
-        alert("Signup failed");
-    }
-}
+//     }catch(err){
+//         console.error(err);
+//         alert("Signup failed");
+//     }
+// }
 </script>
 
 <script>
@@ -307,7 +307,7 @@ async function signup(){
                 email,
                 password,
                 gender,
-                referralCode: referral,
+                referredBy: referral,
                 role:"STUDENT"
             })
         });

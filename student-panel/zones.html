@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Choose Zone</title>
-  <link rel="stylesheet" href="assets/css/main.css">
+ 
   <link rel="stylesheet" href="assets/css/main.css">
   <link rel="stylesheet" href="assets/css/responsive.css">
 
@@ -16,7 +16,8 @@
     cursor:pointer;
     box-shadow:0 0 12px rgba(0,0,0,0.08);
     padding:20px;
-    height:100%;
+    max-width:380px;
+    margin:auto;
 }
 
 .zone-card:hover{
@@ -36,11 +37,15 @@
 
 <div id="navbar"></div>
 
-<div class="container mt-4">
-    <h4 class="mb-4">Choose Zone</h4>
-    <div id="zoneList" class="row card-grid"></div>
-</div>
+<div class="container mt-4 text-center">
 
+    <h4 class="mb-4">Choose Zone</h4>
+
+    <div class="row justify-content-center">
+        <div id="zoneList" class="col-md-4"></div>
+    </div>
+
+</div>
 <script>
 fetch("components/navbar.html")
 .then(res => res.text())

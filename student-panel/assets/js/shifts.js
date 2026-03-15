@@ -2,9 +2,8 @@ const shiftGrid = document.getElementById("shift-grid");
 
 const sectionId = localStorage.getItem("selectedSectionId");
 
-
-
-if (!sectionId) {
+// redirect only if we are on shifts page
+if (!sectionId && window.location.pathname.includes("shifts.html")) {
   window.location.href = "sections.html";
 }
 
@@ -64,7 +63,10 @@ const end = formatTime(shift.endTime);
 
         card.querySelector("button").addEventListener("click", () => {
 
+            console.log("SHIFT CLICKED:", shift.id);
             localStorage.setItem("selectedShiftId", shift.id);
+
+            localStorage.setItem("selectedSectionName", shift.section.name);
             localStorage.setItem("selectedShiftName", shift.name);
 
             localStorage.setItem("seatMRP", shift.mrp);

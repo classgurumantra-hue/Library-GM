@@ -2,6 +2,7 @@ let selectedSeat = null;
 let selectedDuration = null;
 
 let basePrice = 0;
+let currentPrice = 0;
 
 const seatsDiv = document.getElementById("seats");
 const info = document.getElementById("info");
@@ -27,7 +28,8 @@ fetch("http://localhost:8087/api/shifts/" + shiftId)
 console.log("ShiftId:", shiftId);
 
 
-if (!shiftId) {
+if (!shiftId || shiftId === "null") {
+    localStorage.removeItem("selectedShiftId");
     alert("Shift not selected");
     window.location.href = "shifts.html";
 }
@@ -83,26 +85,20 @@ function selectSeat(el, seat){
     selectedSeat = seat.id;
 console.log("Selected Seat:", selectedSeat);
 
-    localStorage.setItem("selectedSeat", seat.seatNumber);
-    localStorage.setItem("seatNumber", seat.seatNumber);
+localStorage.setItem("selectedSeat", seat.seatNumber);
+localStorage.setItem("selectedSeatId", seat.id);
+localStorage.setItem("seatNumber", seat.seatNumber);
 
-   const bookingData = {
-    zone: localStorage.getItem("selectedZoneName") || "-",
-    centre: localStorage.getItem("selectedCentreName") || "-",
-    centreId: localStorage.getItem("centreId") || 0,
-    time: localStorage.getItem("selectedShiftName") || "-",
-    seat: seat.seatNumber,
-    mrp: localStorage.getItem("seatMRP") || 0,
-    price: localStorage.getItem("finalPrice") || 0,
-    discount: localStorage.getItem("discountAmount") || 0
-};
-
-    localStorage.setItem("bookingData", JSON.stringify(bookingData));
+localStorage.setItem("selectedShiftId", shiftId);
+localStorage.setItem("selectedCentreId", localStorage.getItem("selectedCentreId"));
+localStorage.setItem("studentId", localStorage.getItem("studentId"));
+    
 }
 
 /* Payment Page */
 async function goPayment() {
 
+    const selectedSeat = localStorage.getItem("seatNumber");
     if (!selectedSeat) {
         alert("Please select a seat first");
         return;
@@ -126,6 +122,38 @@ console.log("SeatId:", selectedSeat);
 
     try {
 
+        const role = localStorage.getItem("role");
+if(role === "VENDOR"){
+
+    const email = localStorage.getItem("vendorStudentEmail");
+    localStorage.setItem("vendorStudentId", localStorage.getItem("studentId"));
+
+    const vendor = localStorage.getItem("vendorName") || "-";
+
+    const zone = localStorage.getItem("selectedZoneName") || "-";
+    const centre = localStorage.getItem("selectedCentreName") || "-";
+    const section = localStorage.getItem("selectedSectionName") || "-";
+    const shift = localStorage.getItem("selectedShiftName") || "-";
+    const seat = localStorage.getItem("seatNumber") || "-";
+
+    const url =
+    "http://localhost:8087/api/auth/send-admission-verification"
+    + "?studentEmail=" + encodeURIComponent(email)
+    + "&vendorName=" + encodeURIComponent(vendor)
+    + "&zone=" + encodeURIComponent(zone)
+    + "&centre=" + encodeURIComponent(centre)
+    + "&section=" + encodeURIComponent(section)
+    + "&shift=" + encodeURIComponent(shift)
+    + "&seat=" + encodeURIComponent(seat);
+
+    fetch(url);
+
+    alert("Verification email sent to student.");
+
+    // ⭐ IMPORTANT
+
+    return;
+}
 console.log("Booking API call start");
 const response = await fetch(
 "http://localhost:8087/api/bookings?shiftId=" + shiftId +
@@ -172,7 +200,7 @@ document.getElementById("shiftName").innerText = shift.name;
 
 document.getElementById("shiftStart").innerText = shift.startTime;
 
-document.getElementById("shiftDuration").innerText = "Custom Package";
+document.getElementById("shiftDuration").innerText = "Not Selected";
 
 document.getElementById("shiftPrice").innerText = shift.price;
 document.getElementById("availableCoins").innerText = shift.coinLimitUsage;
@@ -191,7 +219,11 @@ shift.discount270Days ? shift.discount270Days : 0;
 document.getElementById("d360").innerText =
 shift.discount360Days ? shift.discount360Days : 0;
 
-basePrice = shift.price;
+basePrice = Number(shift.mrp || shift.price);
+currentPrice = Number(shift.price || shift.mrp);
+console.log("BASE PRICE:", basePrice);
+console.log("CURRENT PRICE:", currentPrice);
+document.getElementById("totalPrice").innerText = currentPrice;
 
 }catch(err){
 
@@ -211,6 +243,7 @@ function selectDuration(days){
 selectedDuration = days;
 
 console.log("Selected Duration:", days);
+document.getElementById("shiftDuration").innerText = days + " Days";
 
 localStorage.setItem("selectedDuration", days);
 
@@ -231,14 +264,16 @@ btn.classList.add("active-duration");
 /* price calculation */
 
 let price = (basePrice / 30) * days;
+currentPrice = price;
 
-document.getElementById("totalPrice").innerText = price;
+let total = price + 30; // admission fee
+
+document.getElementById("totalPrice").innerText = total;
 
 document.getElementById("couponPrice").innerText = 0;
 document.getElementById("coinPrice").innerText = 0;
 document.getElementById("coinInput").value = "";
 document.getElementById("couponCode").value = "";
-document.getElementById("totalPrice").innerText = price + 30;
 
 }
 
@@ -272,7 +307,7 @@ const discount = Number(await response.text());
 
 document.getElementById("couponPrice").innerText = discount;
 
-let total = basePrice - discount + 30;
+let total = currentPrice - discount + 30;
 
 document.getElementById("totalPrice").innerText = total;
 
@@ -308,7 +343,7 @@ document.getElementById("coinPrice").innerText = coins;
 
 let coupon = Number(document.getElementById("couponPrice").innerText);
 
-let total = basePrice - coupon - coins + 30;
+let total = currentPrice - coupon - coins + 30;
 
 if(total < 0){
 total = 0;
@@ -328,26 +363,46 @@ return;
 openPackage();
 
 }
+let purchaseProcessing = false;
+async function purchaseSeat(){
 
-function purchaseSeat(){
 
-let duration = selectedDuration || 30;
+ console.log("centreId:", localStorage.getItem("selectedCentreId"));
+console.log("shiftId:", localStorage.getItem("selectedShiftId"));
+console.log("studentId:", localStorage.getItem("studentId"));
 
-let coupon = Number(document.getElementById("couponPrice").innerText);
-let coins = Number(document.getElementById("coinPrice").innerText);
-let total = Number(document.getElementById("totalPrice").innerText);
+    // ⭐ double click prevent
+const btn = document.querySelector(".purchase-btn");
+btn.disabled = true;
+const shiftId = localStorage.getItem("selectedShiftId");
 
-let bookingData = JSON.parse(localStorage.getItem("bookingData") || "{}");
+const res = await fetch("http://localhost:8087/api/shifts/" + shiftId);
+const shift = await res.json();
 
-bookingData.duration = duration;
-bookingData.couponDiscount = coupon;
-bookingData.coinUsed = coins;
-bookingData.finalPrice = total;
+let total = shift.price + 30;
+
+const bookingData = {
+    zone: localStorage.getItem("selectedZoneName"),
+    centre: localStorage.getItem("selectedCentreName"),
+    centreId: localStorage.getItem("selectedCentreId"),
+    shiftId: shiftId,
+    seatId: localStorage.getItem("selectedSeatId"),
+
+    time: shift.name,
+    seat: localStorage.getItem("seatNumber"),
+
+    mrp: shift.mrp,
+    price: shift.price,
+    finalPrice: shift.price
+};
+
+console.log("BOOKING DATA CREATED:", bookingData);
 
 localStorage.setItem("bookingData", JSON.stringify(bookingData));
 
+
 localStorage.setItem("finalPayable", total);
 
-window.location.href = "payment.html";
+goPayment();
 
 }

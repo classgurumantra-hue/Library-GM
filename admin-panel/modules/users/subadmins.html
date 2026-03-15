@@ -4,7 +4,7 @@
         <div class="row g-3">
             <div class="col-md-6">
                 <label class="form-label fw-semibold">Full Name</label>
-                <input type="text" class="form-control" placeholder="Enter Name" required>
+                <input type="text" class="form-control" id="fullname" placeholder="Enter Name" required>
             </div>
             <div class="col-md-6">
                 <label class="form-label fw-semibold">Mobile Number</label>
@@ -22,17 +22,16 @@
             </div>
             <div class="col-md-12">
                 <label class="form-label fw-semibold">Select Centres (Multi-select)</label>
-                <select class="form-select" multiple>
-                    <option>Centre A - Mumbai</option>
-                    <option>Centre B - Delhi</option>
-                    <option>Centre C - Indore</option>
-                </select>
+                <select class="form-select" id="centreSelect">
+</select>
             </div>
         </div>
     </form>
 </div>
 
 <script>
+
+setTimeout(loadCentres, 500);
     function handleOTPFlow() {
         alert("DEMO OTP: 2026"); // Production style demo popup
         document.getElementById('otpDropdown').style.display = 'block';
@@ -49,4 +48,47 @@
             alert("❌ Invalid OTP. Try again.");
         }
     }
+
+    async function createSubadmin(){
+
+const fullname = document.getElementById("fullname").value;
+const mobile = document.getElementById("mobileInput").value;
+const centreId = document.getElementById("centreSelect").value;
+
+if(!fullname || !mobile || !centreId){
+alert("Please fill all fields");
+return;
+}
+
+try{
+
+const res = await fetch("http://localhost:8087/api/auth/create-subadmin",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+fullname:fullname,
+mobile:mobile,
+centreId:centreId
+})
+});
+
+const data = await res.json();
+
+alert(data.message);
+
+}catch(err){
+
+console.log(err);
+alert("Error creating subadmin");
+
+}
+
+}
 </script>
+<div class="mt-4">
+    <button type="button" class="btn btn-primary" onclick="createSubadmin()">
+        Create Subadmin
+    </button>
+</div>

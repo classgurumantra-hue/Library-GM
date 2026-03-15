@@ -35,7 +35,7 @@ Admissions Open | Book Your Seat Now | Earn Coins via Referral
 
 <!-- ADMISSION BUTTON -->
 <div class="text-center my-4">
-  <a href="admission.html" class="btn-gm">Admission Now</a>
+  <a href="admission.html" class="btn-gm" id="admissionBtn">Admission Now</a>
 </div>
 
 <!-- NOTICE BOARD -->
@@ -95,13 +95,13 @@ Admissions Open | Book Your Seat Now | Earn Coins via Referral
       <div class="icon">🔗</div>
       <h3>Share & Earn</h3>
       <p>Invite friends and earn coins for every successful registration.</p>
-      <button>Share Referral</button>
+      <button id="shareReferral">Share Referral</button>
     </div>
 
     <div class="gm-wallet-item balance-box">
       <div class="icon">💼</div>
       <h3>Wallet Balance</h3>
-      <div class="coins">120</div>
+      <div class="coins" id="walletCoins">0</div>
       <span>GM Coins Available</span>
     </div>
 
@@ -111,14 +111,190 @@ Admissions Open | Book Your Seat Now | Earn Coins via Referral
 
 <div id="footer"></div>
 
+
+
+<script>
+async function loadWalletCoins(){
+
+    let studentId = localStorage.getItem("studentId");
+
+    if(!studentId){
+        console.log("Student not logged in");
+        return;
+    }
+
+    try{
+
+        let response = await fetch("http://localhost:8087/api/auth/user/" + studentId);
+
+        let data = await response.json();
+
+        document.getElementById("walletCoins").innerText = data.walletCoins;
+
+    }catch(err){
+        console.log("Wallet load error");
+    }
+
+}
+
+loadWalletCoins();
+</script>
+
+<script>
+
+async function setupReferral(){
+
+    let studentId = localStorage.getItem("studentId");
+
+    if(!studentId) return;
+
+    let res = await fetch("http://localhost:8087/api/auth/user/" + studentId);
+    let data = await res.json();
+
+    let code = data.referralCode;
+
+    document.getElementById("shareReferral").onclick = function(){
+
+        let text = "Join GM Library using my referral code: " + code;
+
+        navigator.clipboard.writeText(text);
+
+        alert("Referral code copied: " + code);
+    }
+
+}
+
+setupReferral();
+
+</script>
+
 <script src="assets/js/main.js"></script>
 <script src="assets/js/shifts.js"></script>
 <script>
-fetch("components/navbar.html").then(r=>r.text()).then(d=>navbar.innerHTML=d)
-fetch("components/footer.html").then(r=>r.text()).then(d=>footer.innerHTML=d)
+fetch("components/navbar.html")
+.then(res => res.text())
+.then(data => {
+
+    document.getElementById("navbar").innerHTML = data;
+
+    const role = localStorage.getItem("role");
+
+    if(role === "VENDOR"){
+
+        const btn = document.getElementById("navbarAdmissionBtn");
+
+       if(btn){
+    btn.innerText = "Take Admission";
+
+   btn.addEventListener("click", function(e){
+    e.preventDefault();
+
+    window.location.href = "vendor-admission.html";
+});
+
+}
+
+    }
+
+});
 </script>
 
+<script>
 
+function updateVendorButton(){
+
+    const role = localStorage.getItem("role");
+
+    const btn = document.getElementById("admissionBtn");
+
+    if(!btn) return;
+
+    if(role === "VENDOR"){
+
+        btn.textContent = "Take Admission";
+
+        btn.onclick = function(e){
+            e.preventDefault();
+            window.location.href = "vendor-admission.html";
+        };
+
+    }
+
+}
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    const role = localStorage.getItem("role");
+
+    if(role === "VENDOR"){
+
+        const btn = document.getElementById("admissionBtn");
+
+        if(btn){
+            btn.textContent = "Take Admission";
+        }
+
+    }
+
+});
+
+</script>
+
+<script>
+
+function updateNavbarButton(){
+
+    const role = localStorage.getItem("role");
+
+    if(role === "VENDOR"){
+
+        const btn = document.getElementById("navbarAdmissionBtn");
+
+        if(btn){
+            btn.innerText = "Take Admission";
+        }
+
+    }
+
+}
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    const role = localStorage.getItem("role");
+
+    if(role === "VENDOR"){
+
+        const btn = document.getElementById("navbarAdmissionBtn");
+
+        if(btn){
+            btn.innerText = "Take Admission";
+        }
+
+    }
+
+});
+
+</script>
+
+<script>
+
+setTimeout(function(){
+
+    const role = localStorage.getItem("role");
+
+    if(role === "VENDOR"){
+
+        const btn = document.getElementById("navbarAdmissionBtn");
+
+        if(btn){
+            btn.innerText = "Take Admission";
+        }
+
+    }
+
+},1200);
+
+</script>
 
 </body>
 </html>
