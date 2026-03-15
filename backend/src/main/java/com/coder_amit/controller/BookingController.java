@@ -59,4 +59,13 @@ public class BookingController {
     @Autowired
     private BookingRepository bookingRepository;
 
+    @PostMapping("/vendor")
+    public Booking createVendorBooking(@RequestParam Long shiftId,
+            @RequestParam Long seatId,
+            @RequestParam Long studentId,
+            @RequestParam Long vendorId) {
+
+        return bookingService.createVendorBooking(shiftId, seatId, studentId, vendorId);
+    }
+
 }

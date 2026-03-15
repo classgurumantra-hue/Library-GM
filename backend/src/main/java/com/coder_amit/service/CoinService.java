@@ -1,16 +1,27 @@
 package com.coder_amit.service;
 
+import com.coder_amit.model.User;
 import com.coder_amit.model.UserCoins;
 import com.coder_amit.repository.UserCoinsRepository;
 import org.springframework.stereotype.Service;
+import com.coder_amit.repository.UserRepository;
+import com.coder_amit.repository.CoinHistoryRepository;
+import com.coder_amit.model.CoinHistory;
 
 @Service
 public class CoinService {
 
     private final UserCoinsRepository userCoinsRepository;
+    private final UserRepository userRepository;
+    private final CoinHistoryRepository coinHistoryRepository;
 
-    public CoinService(UserCoinsRepository userCoinsRepository) {
+    public CoinService(UserCoinsRepository userCoinsRepository,
+            UserRepository userRepository,
+            CoinHistoryRepository coinHistoryRepository) {
+
         this.userCoinsRepository = userCoinsRepository;
+        this.userRepository = userRepository;
+        this.coinHistoryRepository = coinHistoryRepository;
     }
 
     // Get coins of user
@@ -45,5 +56,36 @@ public class CoinService {
         wallet.setCoins(wallet.getCoins() - coinsUsed);
 
         userCoinsRepository.save(wallet);
+    }
+
+    // Referral reward after successful payment
+    public void processReferralReward(Long studentId, Double amount) {
+
+        User student = userRepository.findById(studentId)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+
+        if (student.getReferredBy() == null || student.getReferredBy().isEmpty()) {
+            return;
+        }
+
+        User referrer = userRepository
+                .findByReferralCode(student.getReferredBy())
+                .orElse(null);
+
+        if (referrer == null) {
+            return;
+        }
+
+        int reward = (int) (amount * 0.30);
+
+        referrer.setWalletCoins(referrer.getWalletCoins() + reward);
+        userRepository.save(referrer);
+
+        CoinHistory history = new CoinHistory();
+        history.setUserId(referrer.getId());
+        history.setCoins((int) reward);
+        history.setType("REFERRAL_REWARD");
+
+        coinHistoryRepository.save(history);
     }
 }

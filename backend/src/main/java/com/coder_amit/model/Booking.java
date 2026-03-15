@@ -17,6 +17,7 @@ public class Booking {
     private Long id;
 
     private Long studentId;
+    private Long vendorId;
 
     @ManyToOne
     @JoinColumn(name = "seat_id", nullable = false)
@@ -27,6 +28,8 @@ public class Booking {
     private Shift shift;
 
     private Double amount;
+    private Double commission;
+    private Double vendorPayable;
     private Double coinsUsed;
 
     private String paymentStatus;

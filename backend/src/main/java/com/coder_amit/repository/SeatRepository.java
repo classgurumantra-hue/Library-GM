@@ -8,5 +8,7 @@ public interface SeatRepository extends JpaRepository<Seat, Long> {
 
     List<Seat> findByShiftIdOrderBySeatNumberAsc(Long shiftId);
 
+    List<Seat> findByShift_Section_IdOrderBySeatNumberAsc(Long sectionId);
+
     void deleteByShiftId(Long shiftId);
 }

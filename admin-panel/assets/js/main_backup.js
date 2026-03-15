@@ -73,6 +73,32 @@ function toggleDrop(id) {
   el.style.display = el.style.display === "none" ? "block" : "none";
 }
 
+async function showHistory(studentId) {
+  try {
+    const res = await fetch(
+      "http://localhost:8087/api/bookings/student/" + studentId,
+    );
+    const bookings = await res.json();
+
+    if (!bookings || bookings.length === 0) {
+      alert("No booking history found");
+      return;
+    }
+
+    let text = "";
+
+    bookings.forEach((b) => {
+      text +=
+        "Seat: " +
+        b.seat.seatNumber +
+        " | Shift: " +
+        b.shift.name +
+        " | Status: " +
+        b.paymentStatus +
+        " | Time: " +
+        b.bookingTime +
+        "\n";
+
     alert(text);
   } catch (err) {
     alert("Error loading history");
@@ -151,20 +177,6 @@ function render(page) {
     </div>
 
     <div id="seatLayout"></div>
-
-<div class="modal fade" id="manualBookingModal" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Manual Seat Booking</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        Seat Number: <span id="selectedSeatNumber"></span>
-      </div>
-    </div>
-  </div>
-</div>
 
   </div>
   `;
@@ -1040,6 +1052,34 @@ async function showHistory(studentId) {
     alert(history);
   } catch (err) {
     console.error(err);
+    alert("Failed to load history");
+  }
+}
+
+async function showHistory(studentId) {
+  try {
+    const response = await fetch(
+      "http://localhost:8087/api/bookings/student/" + studentId,
+    );
+
+    const bookings = await response.json();
+
+    const table = document.getElementById("historyTable");
+
+    table.innerHTML = "";
+
+    if (bookings.length === 0) {
+      table.innerHTML = "<tr><td colspan='5'>No booking history</td></tr>";
+    }
+
+    bookings.forEach((b) => {
+      const row = `
+            <tr>
+            <td>${b.seat.seatNumber}</td>
+            <td>${b.shift.name}</td>
+            <td>
+            <span class="badge ${b.paymentStatus === "SUCCESS" ? "bg-success" : "bg-warning text-dark"}">
+            ${b.paymentStatus}
             </span>
             </td>
             <td>${b.amount}</td>
@@ -2116,31 +2156,3 @@ async function loadStates() {
 }
 
 setTimeout(loadStates, 500);
-async function loadCentresForSeatBooking(zoneId) {
-
-  if (!zoneId) return;
-
-  try {
-
-    const response = await fetch(`http://localhost:8087/api/centres/zone/${zoneId}`);
-    const centres = await response.json();
-
-    const centreSelect = document.getElementById("seatCentreSelect");
-
-    if (!centreSelect) return;
-
-    centreSelect.innerHTML = '<option value="">Select Centre</option>';
-
-    centres.forEach((centre) => {
-      const option = document.createElement("option");
-      option.value = centre.id;
-      option.textContent = centre.centreName;
-      centreSelect.appendChild(option);
-    });
-
-  } catch (error) {
-    console.error("Error loading centres:", error);
-  }
-
-}
-

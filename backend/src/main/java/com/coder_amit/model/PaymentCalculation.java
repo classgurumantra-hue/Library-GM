@@ -20,4 +20,11 @@ public class PaymentCalculation {
     private Double admissionFee;
 
     private Double finalPrice;
+
+    // ⭐ Vendor commission
+    private Double vendorCommission;
+
+    // ⭐ Amount vendor will pay
+    private Double vendorPayable;
+
 }

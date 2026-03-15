@@ -52,6 +52,9 @@ public class PaymentService {
         seat.setLockTime(null);
         seatRepository.save(seat);
 
+        // referral reward
+        coinService.processReferralReward(booking.getStudentId(), booking.getAmount());
+
         // deduct coins if used
         if (booking.getCoinsUsed() != null && booking.getCoinsUsed() > 0) {
             coinService.deductCoins(booking.getStudentId(), booking.getCoinsUsed());
