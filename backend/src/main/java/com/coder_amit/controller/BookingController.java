@@ -5,6 +5,8 @@ import com.coder_amit.service.BookingService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.coder_amit.repository.BookingRepository;
+import org.springframework.http.ResponseEntity;
+import java.util.Map;
 import java.util.List;
 
 @RestController
@@ -21,9 +23,10 @@ public class BookingController {
     @PostMapping
     public Booking createBooking(@RequestParam Long shiftId,
             @RequestParam Long seatId,
-            @RequestParam Long studentId) {
+            @RequestParam Long studentId,
+            @RequestParam(required = false) Integer coinUsed) {
 
-        return bookingService.createBooking(shiftId, seatId, studentId);
+        return bookingService.createBooking(shiftId, seatId, studentId, coinUsed);
     }
 
     @GetMapping
@@ -66,6 +69,15 @@ public class BookingController {
             @RequestParam Long vendorId) {
 
         return bookingService.createVendorBooking(shiftId, seatId, studentId, vendorId);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteBooking(@PathVariable Long id) {
+
+        bookingService.deleteBooking(id);
+
+        return ResponseEntity.ok(
+                Map.of("message", "Booking removed successfully"));
     }
 
 }

@@ -80,3 +80,183 @@
 
 .plus { color: green; }
 .minus { color: red; }
+
+
+/* ================= NEW COINS UI ================= */
+
+.coins-new{
+  padding: 20px;
+}
+
+/* Wallet Card */
+.wallet-card{
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  border-radius: 20px;
+  padding: 30px;
+  text-align: center;
+  color: white;
+  margin-bottom: 20px;
+}
+
+.wallet-card p{
+  font-size: 16px;
+  opacity: 0.8;
+}
+
+.wallet-card h1{
+  font-size: 40px;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+/* Tabs */
+.history-tabs{
+  display: flex;
+  justify-content: center;
+  gap: 15px;              /* 🔥 gap badhaya */
+  margin: 20px 0;         /* ऊपर नीचे space */
+}
+
+.tab-btn{
+  border: none;
+  padding: 8px 22px;
+  border-radius: 25px;
+  background: #eaeaea;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.tab-btn:hover{
+  background: #dcdcdc;
+}
+
+.tab-btn.active{
+  background: #ff5c5c;
+  color: white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+
+/* History */
+.history-container{
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.history-item{
+  background: #f5f5f5;
+  border-radius: 15px;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.history-left{
+  display: flex;
+  flex-direction: column;
+}
+
+.history-title{
+  font-weight: 500;
+}
+
+.history-date{
+  font-size: 12px;
+  color: gray;
+}
+
+.history-amount{
+  font-weight: 600;
+}
+
+.plus{
+  color: green;
+}
+
+.minus{
+  color: red;
+}
+
+/* ===== CENTER ALIGN ===== */
+.coins-new{
+  max-width: 500px;
+  margin: auto;
+}
+
+/* ===== HISTORY HEADING ===== */
+.history-heading{
+  font-size: 18px;
+  font-weight: 600;
+  margin: 20px 0 10px;
+}
+
+/* ===== HISTORY CARD IMPROVED ===== */
+.history-item{
+  background: #f9f9f9;
+  border-radius: 15px;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+/* LEFT SIDE */
+.history-left{
+  display: flex;
+  flex-direction: column;
+}
+
+/* TITLE */
+.history-title{
+  font-weight: 600;
+  color: #1e3c72;
+}
+
+/* DATE */
+.history-date{
+  font-size: 12px;
+  color: gray;
+}
+
+/* AMOUNT */
+.history-amount{
+  font-weight: 600;
+  font-size: 16px;
+}
+
+/* COLORS */
+.plus{
+  color: green;
+}
+
+.minus{
+  color: red;
+}
+
+/* LEFT ROW */
+.history-left-row{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ICON */
+.icon-circle{
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background: #e6f4ea;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: green;
+  font-weight: bold;
+}
+.wallet-card{
+  max-width: 350px;
+  margin: auto;
+}

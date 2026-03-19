@@ -15,6 +15,7 @@
 
 <div class="container">
   <h2>Choose Your Section</h2>
+  <div id="section-grid" class="section-grid"></div>
   <p class="subtitle">Select your preferred hall</p>
 
   <div class="card-grid row justify-content-center"></div>
@@ -27,6 +28,7 @@ fetch("components/navbar.html")
 .then(res => res.text())
 .then(data => {
     document.getElementById("navbar").innerHTML = data;
+    updateVendorNavbar();
 });
 </script>
 

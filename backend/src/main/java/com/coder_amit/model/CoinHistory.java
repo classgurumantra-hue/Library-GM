@@ -21,5 +21,7 @@ public class CoinHistory {
 
     private String type;
 
+    private String description;
+
     private LocalDateTime createdAt = LocalDateTime.now();
 }

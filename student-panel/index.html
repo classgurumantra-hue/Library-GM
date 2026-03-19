@@ -232,6 +232,11 @@ document.addEventListener("DOMContentLoaded", function(){
 
         if(btn){
             btn.textContent = "Take Admission";
+
+            btn.addEventListener("click", function(e){
+                e.preventDefault();
+                window.location.href = "vendor-admission.html";
+            });
         }
 
     }
@@ -295,6 +300,9 @@ setTimeout(function(){
 },1200);
 
 </script>
+
+
+<script src="assets/js/footer.js"></script>
 
 </body>
 </html>

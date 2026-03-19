@@ -859,3 +859,17 @@ padding:10px;
 background:#ff9800 !important;
 color:white;
 }
+
+/* Zones horizontal layout */
+
+#zoneList{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap:20px;
+  padding:20px;
+}
+
+#zoneList .zone-card{
+  min-width:320px;
+  flex-shrink:0;
+}

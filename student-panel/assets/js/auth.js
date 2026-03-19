@@ -114,7 +114,7 @@ let response = await fetch(BACKEND_URL+"/api/auth/signup",{
         email,
         password,
         gender,
-        referralCode: referral,
+        referredBy: referral,
         role:"STUDENT"
     })
 });

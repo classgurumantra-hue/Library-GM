@@ -24,4 +24,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     @Query("SELECT b FROM Booking b WHERE b.studentId = :studentId AND b.shift.section.centre.id = :centreId ORDER BY b.bookingTime DESC")
     List<Booking> findLatestBooking(Long studentId, Long centreId);
+
+    boolean existsByStudentIdAndShiftId(Long studentId, Long shiftId);
 }

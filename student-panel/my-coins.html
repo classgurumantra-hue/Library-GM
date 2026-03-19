@@ -7,40 +7,26 @@
   <link rel="stylesheet" href="assets/css/responsive.css">
 </head>
 <body>
+  <div id="navbar"></div>
+<div class="coins-new">
 
-<div id="navbar"></div>
-
-<div class="coins-dashboard">
-
-  <div class="coin-hero">
-    <div>
-      <p>Total Balance</p>
-      <h1 id="mainCoins">0</h1>
-      <span>GM Coins</span>
-    </div>
-    <button class="redeem-btn">Redeem</button>
+  <!-- Wallet Card -->
+  <div class="wallet-card">
+    <p>Total Wallet Balance</p>
+    <h1 id="mainCoins">0</h1>
   </div>
 
-  <div class="coin-stats">
-    <div class="stat-card">
-      <p>Earned</p>
-      <h2 id="earned">0</h2>
-    </div>
-    <div class="stat-card">
-      <p>Spent</p>
-      <h2 id="spent">0</h2>
-    </div>
-    <div class="stat-card">
-      <p>Bonus</p>
-      <h2 id="bonus">0</h2>
-    </div>
+  <!-- Tabs -->
+  <div class="history-tabs">
+    <button class="tab-btn active" onclick="showTab('credit')">Credit</button>
+    <button class="tab-btn" onclick="showTab('debit')">Debit</button>
   </div>
 
-  <h3 class="history-title">Coin Activity</h3>
-  <div class="coin-activity" id="coinActivity"></div>
 
+<div id="historyContainer" class="history-container">
 </div>
 
+</div>
 <script>
 fetch("components/navbar.html")
   .then(res => res.text())

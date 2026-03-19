@@ -81,7 +81,12 @@ console.log("RESPONSE:", data);
 if(response.ok){
 
     alert(data.message);
-if(data.role === "ADMIN" || data.role === "SUB_ADMIN"){
+if(
+  data.role === "ADMIN" ||
+  data.role === "SUB_ADMIN" ||
+  data.role === "CO_ADMIN" ||
+  data.role === "VENDOR"
+){
 
     localStorage.setItem("role", data.role);
     localStorage.setItem("username", data.username);
@@ -91,20 +96,26 @@ if(data.role === "ADMIN" || data.role === "SUB_ADMIN"){
 
 }
 else if(data.role === "STUDENT"){
+    console.log("LOGIN DATA:", data); 
 
     localStorage.setItem("studentId", data.userId);
     localStorage.setItem("role", data.role);
 
-    window.location.href="index.html";
+    // 🔥 ADD THIS LINE
+    localStorage.setItem("student", JSON.stringify({
+        id: data.userId,
+        role: data.role
+    }));
 
+    window.location.href="index.html";
 }
 else if(data.role === "VENDOR"){
 
     localStorage.setItem("vendorId", data.userId);
+    localStorage.setItem("vendorName", data.fullname);   // ⭐ add this
     localStorage.setItem("role", data.role);
 
     window.location.href="index.html";
-
 }
 
 }

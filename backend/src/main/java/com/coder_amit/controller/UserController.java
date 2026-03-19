@@ -94,12 +94,15 @@ public class UserController {
                     .body(Map.of("message", "User is blocked"));
         }
 
-        return ResponseEntity.ok(
-                Map.of(
-                        "message", "Login successful",
-                        "userId", loggedUser.getId(),
-                        "username", loggedUser.getUsername(),
-                        "role", loggedUser.getRole()));
+        Map<String, Object> response = new HashMap<>();
+
+        response.put("message", "Login successful");
+        response.put("userId", loggedUser.getId());
+        response.put("username", loggedUser.getUsername());
+        response.put("fullname", loggedUser.getFullname());
+        response.put("role", loggedUser.getRole());
+
+        return ResponseEntity.ok(response);
     }
 
     // ⭐ Get all students for admin panel
@@ -136,6 +139,11 @@ public class UserController {
 
         return ResponseEntity.ok(
                 Map.of("message", message));
+    }
+
+    @GetMapping("/encode")
+    public String encodePassword(@RequestParam String password) {
+        return new BCryptPasswordEncoder().encode(password);
     }
 
     // ⭐ Get user wallet for dashboard
@@ -222,7 +230,6 @@ public class UserController {
         user.setUsername(email);
         user.setPassword(password);
         user.setCommission(commission);
-        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         user.setRole(Role.VENDOR);
 
         // zone save
@@ -317,7 +324,11 @@ public class UserController {
             @RequestParam String centre,
             @RequestParam String section,
             @RequestParam String shift,
-            @RequestParam String seat) {
+            @RequestParam String seat,
+            @RequestParam Long centreId,
+            @RequestParam Long shiftId,
+            @RequestParam Long seatId,
+            @RequestParam Long studentId) {
 
         try {
 
@@ -332,7 +343,11 @@ public class UserController {
                     + "&centre=" + URLEncoder.encode(centre, StandardCharsets.UTF_8)
                     + "&section=" + URLEncoder.encode(section, StandardCharsets.UTF_8)
                     + "&shift=" + URLEncoder.encode(shift, StandardCharsets.UTF_8)
-                    + "&seat=" + URLEncoder.encode(seat, StandardCharsets.UTF_8);
+                    + "&seat=" + URLEncoder.encode(seat, StandardCharsets.UTF_8)
+                    + "&centreId=" + centreId
+                    + "&shiftId=" + shiftId
+                    + "&seatId=" + seatId
+                    + "&studentId=" + studentId;
 
             System.out.println("VERIFY LINK: " + link);
 

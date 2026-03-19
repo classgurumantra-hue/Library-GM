@@ -436,3 +436,32 @@ body {
     display: block;
   }
 }
+
+#bookingTableBody td{
+vertical-align: middle;
+white-space: nowrap;
+font-size: 14px;
+}
+
+#bookingTableBody td small{
+display:block;
+color:#666;
+}
+
+.table th{
+white-space: nowrap;
+font-size:14px;
+}
+
+.badge{
+font-size:12px;
+padding:6px 10px;
+}
+
+.btn-danger{
+padding:4px 10px;
+font-size:12px;
+}
+.menu {
+  padding-top: 60px;
+}

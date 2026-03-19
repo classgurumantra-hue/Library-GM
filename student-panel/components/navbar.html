@@ -12,7 +12,7 @@
     <li class="dropdown">
       <a href="#">Dashboard ▾</a>
       <ul class="dropdown-menu">
-        <li><a href="/my-coins.html">My Coins</a></li>
+        <li><a href="my-coins.html">My Coins</a></li>
         <li><a href="/mycoupons.html">My Coupon</a></li>
         <li><a href="booking-list.html">Booking List</a></li>
         <li><a href="booking-history.html">Booking History</a></li>
@@ -47,6 +47,11 @@ document.addEventListener("DOMContentLoaded", function(){
 
         if(btn){
             btn.innerText = "Take Admission";
+
+            btn.addEventListener("click", function(e){
+                e.preventDefault();
+                window.location.href = "vendor-admission.html";
+            });
         }
 
     }

@@ -31,7 +31,8 @@ public class CouponService {
         return couponRepository.findByCode(code);
     }
 
-    public Double validateAndCalculateDiscount(String code, Double price, Long centreId, String gender) {
+    public Double validateAndCalculateDiscount(String code, Double price, Long centreId, String gender,
+            String userType) {
 
         Optional<Coupon> optionalCoupon = couponRepository.findByCode(code);
 
@@ -63,6 +64,15 @@ public class CouponService {
         if (coupon.getGenders() != null && !coupon.getGenders().isEmpty()
                 && !coupon.getGenders().contains(gender)) {
             throw new RuntimeException("Coupon not valid for this gender");
+
+        }
+
+        // user type check (STUDENT / VENDOR / ALL)
+        if (coupon.getApplicableFor() != null && !coupon.getApplicableFor().equalsIgnoreCase("ALL")) {
+
+            if (!coupon.getApplicableFor().equalsIgnoreCase(userType)) {
+                throw new RuntimeException("Coupon not applicable for this user");
+            }
         }
 
         Double discount;
@@ -72,7 +82,7 @@ public class CouponService {
         } else {
             discount = coupon.getDiscountValue();
         }
-
+        System.out.println("DISCOUNT = " + discount);
         return discount;
     }
 }

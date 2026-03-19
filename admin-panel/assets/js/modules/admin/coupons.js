@@ -83,14 +83,48 @@ async function createCoupon() {
   const minPrice = document.getElementById("minPrice").value;
   const startDate = document.getElementById("startDate").value;
   const expiryDate = document.getElementById("expiryDate").value;
+  
 
-  const data = {
-    name: name,
-    code: code,
-    minPrice: minPrice,
-    startDate: startDate,
-    expiryDate: expiryDate,
-  };
+const centres = [];
+document.querySelectorAll(".centre-checkbox:checked").forEach(c => {
+  centres.push(Number(c.value));
+});
+
+const genders = [];
+document.querySelectorAll(
+  "input[value='MALE']:checked, input[value='FEMALE']:checked, input[value='OTHER']:checked"
+).forEach(g => {
+  genders.push(g.value);
+});
+
+let applicableFor = "ALL";
+
+if (document.getElementById("studentCheck").checked) {
+  applicableFor = "STUDENT";
+}
+if (document.getElementById("vendorCheck").checked) {
+  applicableFor = "VENDOR";
+}
+if (document.getElementById("allUserCheck").checked) {
+  applicableFor = "ALL";
+}
+const discountType = document.getElementById("discountType").value;
+const discountValue = document.getElementById("discountValue").value;
+
+const data = {
+  name: name,
+  code: code,
+  minPrice: minPrice,
+  startDate: startDate,
+  expiryDate: expiryDate,
+  centres: centres,
+  genders: genders,
+  applicableFor: applicableFor,
+  discountType: discountType,
+discountValue: discountValue
+};
+
+console.log("FINAL DATA:", data);
 
   try {
     const res = await fetch("http://localhost:8087/api/coupons", {
@@ -102,9 +136,10 @@ async function createCoupon() {
     });
 
     if (!res.ok) {
-      alert("Failed to create coupon");
-      return;
-    }
+  const error = await res.text();
+  alert("❌ " + error);
+  return;
+}
     const result = await res.json();
 
     alert("Coupon Created Successfully");

@@ -46,9 +46,73 @@ function eye(id) {
 }
 
 // Default Load
-render("students");
+const savedPage = localStorage.getItem("activePage") || "students";
+render(savedPage);
 
 function render(page) {
+  const role = localStorage.getItem("role");
+
+// 🔥 COADMIN RESTRICTION
+if(role === "CO_ADMIN"){
+
+  const observer = new MutationObserver(() => {
+
+    const sidebar = document.querySelector(".sidebar");
+
+    if(sidebar){
+
+      console.log("COADMIN FULL CLEAN");
+
+  sidebar.innerHTML = `
+  <div style="padding: 20px;">
+
+    <!-- 🔥 Title -->
+    <h6 style="
+      color: #aaa;
+      font-size: 12px;
+      margin-bottom: 20px;
+      letter-spacing: 1px;
+    ">
+      COADMIN DASHBOARD
+    </h6>
+
+    <!-- 🔥 Menu -->
+    <ul style="list-style: none; padding: 0; margin: 0;">
+
+      <li>
+        <a href="#" id="l-booking-history"
+          onclick="render('booking-history')"
+          style="
+            display: block;
+            padding: 12px 16px;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #5f5fff, #7a5cff);
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+          ">
+          Booking History
+        </a>
+      </li>
+
+    </ul>
+
+  </div>
+`;
+
+      observer.disconnect();
+    }
+
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+
+}
+
+  localStorage.setItem("activePage", page);
   const root = document.getElementById("mainContent");
   document
     .querySelectorAll(".sub-link")
@@ -295,7 +359,13 @@ Loading centres...
 ` : ``}
 <div class="col-12 text-end mt-3">
 <button id="subadminBtn" class="btn btn-primary px-5"
-onclick="${page === 'vendor' ? 'registerVendor()' : 'registerSubadmin()'}">Register</button>
+onclick="${
+  page === 'vendor'
+    ? 'registerVendor()'
+    : page === 'coadmin'
+    ? 'registerCoadmin()'
+    : 'registerSubadmin()'
+}">Register</button>
 </div>
 
 </div>
@@ -326,7 +396,7 @@ ${page === "vendor" ? `
 </tr>
 </thead>
 
-<tbody id="subadminTable">
+<tbody id="${page}Table">
 
 <tr>
 <td colspan="3" class="text-center">Loading...</td>
@@ -708,6 +778,26 @@ Loading centres...
 
 </div>
 
+<div class="col-md-12">
+<label class="form-label">Applicable For</label>
+
+<div class="form-check">
+<input class="form-check-input" type="checkbox" id="studentCheck">
+<label class="form-check-label">Student</label>
+</div>
+
+<div class="form-check">
+<input class="form-check-input" type="checkbox" id="vendorCheck">
+<label class="form-check-label">Vendor</label>
+</div>
+
+<div class="form-check">
+<input class="form-check-input" type="checkbox" id="allUserCheck" checked>
+<label class="form-check-label">All</label>
+</div>
+
+</div>
+
 <div class="col-md-4">
 <label class="form-label">Minimum Price</label>
 <input type="number" class="form-control" id="minPrice">
@@ -723,6 +813,19 @@ Loading centres...
 <input type="date" class="form-control" id="expiryDate">
 </div>
 
+<div class="col-md-6">
+<label class="form-label">Discount Type</label>
+<select id="discountType" class="form-select">
+  <option value="PERCENTAGE">Percentage</option>
+  <option value="FLAT">Flat</option>
+</select>
+</div>
+
+<div class="col-md-6">
+<label class="form-label">Discount Value</label>
+<input type="number" id="discountValue" class="form-control">
+</div>
+
 <div class="col-12 mt-3 text-end">
 <button class="btn btn-primary px-5" onclick="createCoupon()">Submit</button>
 </div>
@@ -735,6 +838,15 @@ Loading centres...
   } else if (page === "booking-history") {
     root.innerHTML = `<div class="card-pro"><h4>Booking History List</h4><h6 class="text-muted mb-4">Show All Booking</h6><div class="filter-section">
   <h6 class="fw-bold mb-3"><i class="bi bi-funnel"></i> Filter system</h6>
+
+<div class="col-md-4">
+<label class="small fw-bold">Search</label>
+<div class="input-group">
+  <span class="input-group-text"><i class="bi bi-search"></i></span>
+  <input type="text" id="bookingSearch" class="form-control" placeholder="Search by name...">
+</div>
+</div>
+
   <div class="row g-3">
 
     <div class="col-md-3">
@@ -746,6 +858,16 @@ Loading centres...
       <label class="small fw-bold">Choose Centre</label>
       <select id="filterCentre" class="form-select"></select>
     </div>
+
+    <div class="col-md-3">
+<label class="small fw-bold">Start Date</label>
+<input type="date" id="filterStartDate" class="form-control">
+</div>
+
+<div class="col-md-3">
+<label class="small fw-bold">End Date</label>
+<input type="date" id="filterEndDate" class="form-control">
+</div>
 
     <div class="col-md-3">
       <label class="small fw-bold">Choose Section</label>
@@ -763,20 +885,44 @@ Loading centres...
 
   </div>
 </div>
-            <div class="table-responsive mt-4"><table class="table"><thead><tr><th>ID</th><th>User</th><th>Seat</th><th>Status</th></tr></thead><tbody id="bookingTableBody"></tbody></table></div></div>`;
+            <div class="table-responsive mt-4"><table class="table"><thead>
+<tr>
+<th>Name</th>
+<th>Mobile</th>
+<th>Email</th>
+<th>Zone</th>
+<th>Centre</th>
+<th>Section</th>
+<th>Shift Timing</th>
+<th>Seat</th>
+<th>Start Date</th>
+<th>Expiry Date</th>
+<th>Status</th>
+<th style="min-width:120px">Action</th>
+</tr>
+</thead><tbody id="bookingTableBody"></tbody></table></div></div>`;
 
-    // loadBookings();
+    loadBookings();
     loadFilterZones();
 
-   document
-  .getElementById("applyFilterBtn")
-  .addEventListener("click", applyBookingFilter);
+  setTimeout(() => {
+  document
+    .getElementById("applyFilterBtn")
+    ?.addEventListener("click", applyBookingFilter);
+}, 100);
+
+document.getElementById("bookingSearch")
+  ?.addEventListener("input", applyBookingFilter);
   }
 }
 
 
 async function applyBookingFilter() {
   const zone = document.getElementById("filterZone").value;
+  const centre = document.getElementById("filterCentre").value;
+
+  const startDate = document.getElementById("filterStartDate")?.value;
+const endDate = document.getElementById("filterEndDate")?.value;
 
   let url = "http://localhost:8087/api/bookings";
 
@@ -787,25 +933,107 @@ async function applyBookingFilter() {
   const response = await fetch(url);
   const bookings = await response.json();
 
+  console.log("BOOKINGS DATA:", bookings);
+ 
+
+  let filtered = bookings;
+
+  const search = document.getElementById("bookingSearch")?.value?.toLowerCase();
+  console.log("SEARCH VALUE:", search);
+
+if (search) {
+  filtered = filtered.filter(b => {
+    const name = b.student?.fullname?.toLowerCase() || "";
+    const email = b.student?.email?.toLowerCase() || "";
+    const mobile = (b.student?.mobile || "").toLowerCase();
+
+    return (
+      name.includes(search) ||
+      email.includes(search) ||
+      mobile.includes(search)
+    );
+  });
+}
+
+if (centre) {
+  filtered = filtered.filter(b =>
+    b.shift?.section?.centre?.id == centre
+  );
+}
+
+
+if (startDate) {
+  filtered = filtered.filter(b =>
+    b.shift?.startDate && new Date(b.shift.startDate) >= new Date(startDate)
+  );
+}
+
+if (endDate) {
+  filtered = filtered.filter(b =>
+    b.shift?.startDate && new Date(b.shift.startDate) <= new Date(endDate)
+  );
+}
+
   const table = document.getElementById("bookingTableBody");
   table.innerHTML = "";
 
-  bookings.forEach((b) => {
-    let statusColor =
-      b.paymentStatus === "SUCCESS"
-        ? "success"
-        : b.paymentStatus === "PENDING"
-          ? "warning"
-          : "secondary";
+  if (filtered.length === 0) {
+  table.innerHTML = `
+    <tr>
+      <td colspan="12" class="text-center text-muted py-4">
+        No bookings found
+      </td>
+    </tr>
+  `;
+  return;
+}
 
-    let row = `
-        <tr>
-            <td>${b.id}</td>
-            <td>${b.studentId}</td>
-            <td>${b.seat ? b.seat.seatNumber : "-"}</td>
-            <td><span class="badge bg-${statusColor}">${b.paymentStatus}</span></td>
-        </tr>
-        `;
+  filtered.forEach((b) => {
+const today = new Date();
+today.setHours(0,0,0,0);
+
+let expiry = b.shift?.expiryDate ? new Date(b.shift.expiryDate) : null;
+
+if (expiry) {
+  expiry.setHours(0,0,0,0);
+}
+
+let statusText = "Active";
+let statusColor = "success";
+
+// 1️⃣ पहले Pending check होगा
+if (!b.payment) {
+    statusText = "Pending";
+    statusColor = "warning";
+}
+// 2️⃣ फिर Expired
+else if (expiry && expiry < today) {
+    statusText = "Expired";
+    statusColor = "secondary";
+}
+// 3️⃣ बाकी सब Active
+
+let row = `
+<tr>
+    <td>${b.student?.fullname || "-"}</td>
+    <td>${b.student?.mobile || "-"}</td>
+    <td>${b.student?.email || "-"}</td>
+    <td>${b.shift?.section?.centre?.zone?.zoneName || "-"}</td>
+    <td>${b.shift?.section?.centre?.centreName || "-"}</td>
+    <td>${b.shift?.section?.name || "-"}</td>
+    <td>${b.shift?.startTime || "-"}</td>
+    <td>${b.seat?.seatNumber || "-"}</td>
+   <td>${b.shift?.startDate ? new Date(b.shift.startDate).toLocaleDateString() : "-"}</td>
+<td>${b.shift?.expiryDate ? new Date(b.shift.expiryDate).toLocaleDateString() : "-"}</td>
+    <td><span class="badge bg-${statusColor}">${statusText}</span></td>
+    
+    <td>
+      <button class="btn btn-danger btn-sm" onclick="removeBooking(${b.id})">
+        Remove
+      </button>
+    </td>
+</tr>
+`;
 
     table.innerHTML += row;
   });

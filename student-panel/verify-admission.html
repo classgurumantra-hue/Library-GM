@@ -82,25 +82,37 @@ document.getElementById("acceptBtn").onclick = async function(){
     alert("Admission accepted successfully");
 
 localStorage.setItem("selectedSeat", seat);
+localStorage.setItem("seatNumber", seat);
 localStorage.setItem("selectedCentre", centre);
 localStorage.setItem("selectedZone", zone);
+localStorage.setItem("selectedSeatId", params.get("seatId"));
 
 // ⭐ Payment page ke liye booking data save
+localStorage.setItem("selectedShiftId", params.get("shiftId"));
+const studentIdParam = params.get("studentId");
+
+if (studentIdParam && studentIdParam !== "null") {
+    localStorage.setItem("studentId", studentIdParam);
+}
+localStorage.setItem("selectedCentreId", params.get("centreId"));
+
 const bookingData = {
     zone: zone,
     centre: centre,
+    centreId: params.get("centreId"),
+
+    shiftId: params.get("shiftId"),
+    seatId: localStorage.getItem("selectedSeatId"),
+
     time: shift,
     seat: seat,
+
     mrp: localStorage.getItem("seatMRP") || 0,
     price: localStorage.getItem("finalPrice") || 0,
     finalPrice: localStorage.getItem("finalPrice") || 0
 };
 
 localStorage.setItem("bookingData", JSON.stringify(bookingData));
-
-localStorage.setItem("selectedShiftId", params.get("shiftId"));
-localStorage.setItem("studentId", params.get("studentId"));
-localStorage.setItem("centreId", params.get("centreId"));
 
 // shiftId already stored from seats page
 

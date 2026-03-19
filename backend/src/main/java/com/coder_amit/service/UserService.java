@@ -81,30 +81,12 @@ public class UserService {
             referralHistory.setType("REFERRAL_REWARD");
 
             coinHistoryRepository.save(referralHistory);
-        }
 
+            // 🔥 wallet update bhi karo
+            refUser.setWalletCoins(refUser.getWalletCoins() + 50);
+            userRepository.save(refUser);
+        }
         User savedUser = userRepository.save(user);
-        if (savedUser.getReferredBy() != null && !savedUser.getReferredBy().isEmpty()) {
-
-            Optional<User> referrer = userRepository.findByReferralCode(savedUser.getReferredBy());
-
-            if (referrer.isPresent()) {
-
-                User refUser = referrer.get();
-
-                refUser.setWalletCoins(refUser.getWalletCoins() + 50);
-
-                userRepository.save(refUser);
-
-                CoinHistory referralHistory = new CoinHistory();
-                referralHistory.setUserId(refUser.getId());
-                referralHistory.setCoins(50);
-                referralHistory.setType("REFERRAL_REWARD");
-
-                coinHistoryRepository.save(referralHistory);
-            }
-        }
-
         // signup bonus history
         CoinHistory history = new CoinHistory();
         history.setUserId(savedUser.getId());
@@ -117,6 +99,7 @@ public class UserService {
     }
 
     // ✅ Login Logic
+    // ✅ SIMPLE LOGIN (NO BCRYPT)
     public Optional<User> login(String email, String password) {
 
         Optional<User> userOpt = userRepository.findByEmail(email);
@@ -125,13 +108,7 @@ public class UserService {
 
             User user = userOpt.get();
 
-            // bcrypt match
-            if (passwordEncoder.matches(password, user.getPassword())) {
-                return Optional.of(user);
-            }
-
-            // fallback plain text match
-            if (password.equals(user.getPassword())) {
+            if (user.getPassword().equals(password)) {
                 return Optional.of(user);
             }
         }

@@ -39,4 +39,6 @@ public class Coupon {
     @ElementCollection
     private List<Long> centres;
 
+    private String applicableFor; // STUDENT / VENDOR / ALL
+
 }

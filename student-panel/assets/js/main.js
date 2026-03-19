@@ -157,3 +157,53 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 });
+
+function updateVendorNavbar(){
+
+    const role = localStorage.getItem("role");
+
+    if(role === "VENDOR"){
+
+        const btn = document.getElementById("navbarAdmissionBtn");
+
+        if(btn){
+            btn.innerText = "Take Admission";
+
+            btn.onclick = function(e){
+                e.preventDefault();
+                window.location.href = "vendor-admission.html";
+            };
+        }
+
+    }
+
+}
+
+function loadNavbar(){
+
+    fetch("components/navbar.html")
+    .then(res => res.text())
+    .then(data => {
+
+        document.getElementById("navbar").innerHTML = data;
+
+        const role = localStorage.getItem("role");
+
+        if(role === "VENDOR"){
+
+            const btn = document.getElementById("navbarAdmissionBtn");
+
+            if(btn){
+                btn.innerText = "Take Admission";
+
+                btn.onclick = function(e){
+                    e.preventDefault();
+                    window.location.href = "vendor-admission.html";
+                };
+            }
+
+        }
+
+    });
+
+}

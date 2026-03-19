@@ -36,7 +36,11 @@ public class PaymentService {
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
 
         Payment payment = new Payment();
-        payment.setAmount(booking.getAmount());
+        Double amount = booking.getVendorPayable() != null
+                ? booking.getVendorPayable()
+                : booking.getAmount();
+
+        payment.setAmount(amount);
         payment.setStatus("CREATED");
         payment.setPaymentDate(LocalDate.now());
         payment.setRazorpayOrderId(razorpayOrderId);

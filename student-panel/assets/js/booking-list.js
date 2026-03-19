@@ -21,14 +21,36 @@ async function loadBookings(){
 
     let status = today > expiry ? "Expired" : "Active";
 
+    let commissionHTML = "";
+
+    // ⭐ Vendor booking
+if(b.vendorId !== null){
+
+  commissionHTML = `
+    <p>Total Price: ₹${b.amount}</p>
+    <p>Commission: ₹${b.commission}</p>
+    <p>Paid After Commission: ₹${b.vendorPayable}</p>
+  `;
+
+}
+    else{
+
+      commissionHTML = `
+        <p>Total Paid: ₹${b.amount}</p>
+      `;
+
+    }
+
     container.innerHTML += `
       <div class="card">
         <h3>${centre}</h3>
         <p>Seat: ${seat}</p>
         <p>Date: ${date}</p>
+        ${commissionHTML}
         <p class="${status === 'Active' ? 'status-active' : 'status-expired'}">${status}</p>
       </div>
     `;
+
   });
 
 }

@@ -16,7 +16,7 @@ async function loadUsersByRole(page){
     const res = await fetch("http://localhost:8087/api/auth/role/" + role);
     const users = await res.json();
 
-    const table = document.getElementById("subadminTable");
+    const table = document.getElementById(page + "Table");
 
     if(!table) return;
 
@@ -61,12 +61,25 @@ ${role === "VENDOR" ? `
 <td>
 
 <button class="btn btn-primary btn-sm"
-onclick="editVendor(${u.id})">
+${u.blocked ? "disabled" : ""}
+onclick="${
+  page === 'vendor'
+    ? `editVendor(${u.id})`
+    : page === 'coadmin'
+    ? `editUser('coadmin', ${u.id})`
+    : `editSubadmin(${u.id})`
+}">
 Edit
 </button>
 
 <button class="btn btn-warning btn-sm"
-onclick="blockSubadmin(${u.id})">
+onclick="${
+  page === 'vendor'
+    ? `blockVendor(${u.id})`
+    : page === 'coadmin'
+    ? `toggleCoadmin(${u.id})`
+    : `blockSubadmin(${u.id})`
+}">
 ${u.blocked ? "Unblock" : "Block"}
 </button>
 
@@ -219,7 +232,10 @@ async function editVendor(id){
     document.querySelector("input[placeholder='Mobile Number']").value = data.mobile || "";
     document.querySelector("input[type='email']").value = data.email || "";
 
-    document.getElementById("vendorCommission").value = data.commission || "";
+    const commissionEl = document.getElementById("vendorCommission");
+if (commissionEl) {
+  commissionEl.value = data.commission || "";
+}
 
     // zone select
     if(data.zoneId){
@@ -293,3 +309,28 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
 });
+
+async function blockVendor(id){
+
+  if(!confirm("Change vendor status?")){
+    return;
+  }
+
+  try{
+
+    const res = await fetch("http://localhost:8087/api/auth/block/" + id,{
+      method: "PUT"
+    });
+
+    const data = await res.json();
+
+console.log(data.message);
+
+loadUsersByRole("VENDOR");
+
+  }catch(err){
+    console.error(err);
+    alert("Vendor status change failed");
+  }
+
+}

@@ -28,7 +28,8 @@ public class BookingService {
         this.userRepository = userRepository;
     }
 
-    public Booking createBooking(Long shiftId, Long seatId, Long studentId) {
+    public Booking createBooking(Long shiftId, Long seatId, Long studentId, Integer coinUsed) {
+        System.out.println("COIN USED RECEIVED: " + coinUsed);
 
         Seat seat = seatRepository.findById(seatId)
 
@@ -45,24 +46,40 @@ public class BookingService {
         Shift shift = shiftRepository.findById(shiftId)
                 .orElseThrow(() -> new RuntimeException("Shift not found"));
 
+        boolean exists = bookingRepository.existsByStudentIdAndShiftId(studentId, shiftId);
+
+        if (exists) {
+            throw new RuntimeException("Student already booked this shift");
+        }
+
         Booking booking = new Booking();
         booking.setShift(shift);
         booking.setSeat(seat);
         booking.setStudentId(studentId);
         booking.setAmount(shift.getPrice());
 
-        Double commissionPercent = 0.0;
+        booking.setCommission(null);
+        booking.setVendorPayable(null);
 
-        // future में vendor से आएगा
-        commissionPercent = 10.0;
-
-        Double commissionAmount = shift.getPrice() * commissionPercent / 100;
-
-        booking.setCommission(commissionAmount);
-
-        booking.setVendorPayable(shift.getPrice() - commissionAmount);
-        booking.setPaymentStatus("PENDING");
         booking.setBookingTime(LocalDateTime.now());
+
+        // ⭐ COIN DEDUCTION
+
+        if (coinUsed != null && coinUsed > 0) {
+
+            User user = userRepository.findById(studentId)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            int currentCoins = user.getWalletCoins();
+
+            if (coinUsed > currentCoins) {
+                throw new RuntimeException("Not enough coins");
+            }
+
+            user.setWalletCoins(currentCoins - coinUsed);
+
+            userRepository.save(user);
+        }
 
         return bookingRepository.save(booking);
     }
@@ -87,8 +104,8 @@ public class BookingService {
             throw new RuntimeException("Seat not available");
         }
 
-        seat.setStatus("HOLD");
-        seat.setLockTime(java.time.LocalDateTime.now());
+        seat.setStatus("BOOKED");
+        seat.setLockTime(null);
         seatRepository.save(seat);
 
         Shift shift = shiftRepository.findById(shiftId)
@@ -122,5 +139,9 @@ public class BookingService {
         booking.setBookingTime(LocalDateTime.now());
 
         return bookingRepository.save(booking);
+    }
+
+    public void deleteBooking(Long id) {
+        bookingRepository.deleteById(id);
     }
 }

@@ -28,8 +28,7 @@ fetch("http://localhost:8087/api/shifts/" + shiftId)
 console.log("ShiftId:", shiftId);
 
 
-if (!shiftId || shiftId === "null") {
-    localStorage.removeItem("selectedShiftId");
+if (!shiftId || shiftId === "null" || shiftId === "undefined") {
     alert("Shift not selected");
     window.location.href = "shifts.html";
 }
@@ -89,9 +88,6 @@ localStorage.setItem("selectedSeat", seat.seatNumber);
 localStorage.setItem("selectedSeatId", seat.id);
 localStorage.setItem("seatNumber", seat.seatNumber);
 
-localStorage.setItem("selectedShiftId", shiftId);
-localStorage.setItem("selectedCentreId", localStorage.getItem("selectedCentreId"));
-localStorage.setItem("studentId", localStorage.getItem("studentId"));
     
 }
 
@@ -136,15 +132,23 @@ if(role === "VENDOR"){
     const shift = localStorage.getItem("selectedShiftName") || "-";
     const seat = localStorage.getItem("seatNumber") || "-";
 
-    const url =
-    "http://localhost:8087/api/auth/send-admission-verification"
-    + "?studentEmail=" + encodeURIComponent(email)
-    + "&vendorName=" + encodeURIComponent(vendor)
-    + "&zone=" + encodeURIComponent(zone)
-    + "&centre=" + encodeURIComponent(centre)
-    + "&section=" + encodeURIComponent(section)
-    + "&shift=" + encodeURIComponent(shift)
-    + "&seat=" + encodeURIComponent(seat);
+const centreId = localStorage.getItem("selectedCentreId");
+const shiftId = localStorage.getItem("selectedShiftId");
+const seatId = localStorage.getItem("selectedSeatId");
+
+const url =
+"http://localhost:8087/api/auth/send-admission-verification"
++ "?studentEmail=" + encodeURIComponent(email)
++ "&vendorName=" + encodeURIComponent(vendor)
++ "&zone=" + encodeURIComponent(zone)
++ "&centre=" + encodeURIComponent(centre)
++ "&section=" + encodeURIComponent(section)
++ "&shift=" + encodeURIComponent(shift)
++ "&seat=" + encodeURIComponent(seat)
++ "&centreId=" + centreId
++ "&shiftId=" + shiftId
++ "&seatId=" + seatId
++ "&studentId=" + localStorage.getItem("studentId");
 
     fetch(url);
 
@@ -155,10 +159,13 @@ if(role === "VENDOR"){
     return;
 }
 console.log("Booking API call start");
+const coins = localStorage.getItem("coinUsed") || 0;
+
 const response = await fetch(
 "http://localhost:8087/api/bookings?shiftId=" + shiftId +
-"&seatId=" + selectedSeat +
-"&studentId=" + localStorage.getItem("studentId"),
+"&seatId=" + localStorage.getItem("selectedSeatId") +
+"&studentId=" + localStorage.getItem("studentId") +
+"&coinUsed=" + coins,
 {
 method: "POST"
 }
@@ -177,6 +184,37 @@ window.location.href = "payment.html";
 
     } catch (err) {
         alert(err.message);
+    }
+}
+
+
+async function loadUserCoins(){
+
+    const userId = localStorage.getItem("studentId");
+
+    if(!userId) return;
+
+    try{
+
+        const res = await fetch("http://localhost:8087/api/bookings/student/" + userId);
+        const data = await res.json();
+
+        console.log("USER BOOKING DATA:", data);
+
+        let coins = 0;
+
+        if(data && data.length > 0){
+            coins = data[data.length - 1].student.walletCoins || 0;
+        }
+
+        localStorage.setItem("walletCoins", coins);
+
+        document.getElementById("availableCoins").innerText = coins;
+
+        console.log("FINAL COINS:", coins);
+
+    }catch(err){
+        console.log(err);
     }
 }
 async function loadShiftDetails(){
@@ -203,7 +241,7 @@ document.getElementById("shiftStart").innerText = shift.startTime;
 document.getElementById("shiftDuration").innerText = "Not Selected";
 
 document.getElementById("shiftPrice").innerText = shift.price;
-document.getElementById("availableCoins").innerText = shift.coinLimitUsage;
+document.getElementById("availableCoins").innerText = localStorage.getItem("walletCoins") || 0;
 
 /* discount UI only */
 
@@ -233,9 +271,10 @@ console.log(err);
 }
 function openPackage(){
 
-document.getElementById("packageModal").style.display = "flex";
+    document.getElementById("packageModal").style.display = "flex";
 
-loadShiftDetails();
+    loadShiftDetails();
+    loadUserCoins();   // ⭐ ADD THIS LINE
 
 }
 function selectDuration(days){
@@ -286,24 +325,23 @@ alert("Enter coupon code");
 return;
 }
 
-const centreId = localStorage.getItem("centreId");
+const centreId = localStorage.getItem("selectedCentreId");
 
 try{
 
 const response = await fetch(
-"http://localhost:8087/api/coupons/validate?code="+code+
-"&price="+document.getElementById("totalPrice").innerText+
-"&centreId="+centreId+
-"&gender=MALE",
+`http://localhost:8087/api/coupons/validate?code=${code}&price=${currentPrice}&centreId=${centreId}&gender=MALE&userType=${localStorage.getItem("role")}`,
 { method:"POST" }
 );
 
+const data = await response.json();
+
 if(!response.ok){
-alert("Invalid or expired coupon");
+alert(data.message);
 return;
 }
 
-const discount = Number(await response.text());
+const discount = Number(data.discount || 0);
 
 document.getElementById("couponPrice").innerText = discount;
 
@@ -323,13 +361,20 @@ alert("Coupon error");
 
 document.getElementById("coinInput").addEventListener("input", applyCoins);
 
+console.log("COIN DEBUG:", {
+  inputCoins: document.getElementById("coinInput").value,
+  available: document.getElementById("availableCoins").innerText,
+  basePrice: basePrice,
+  currentPrice: currentPrice
+});
+
 function applyCoins(){
 
 let coins = Number(document.getElementById("coinInput").value);
 
-let available = Number(document.getElementById("availableCoins").innerText);
+let available = Number(localStorage.getItem("walletCoins") || 0);
 
-let maxAllowed = basePrice * 0.30;
+let maxAllowed = Number(localStorage.getItem("coinLimitUsage") || 0);
 
 if(coins > maxAllowed){
 coins = maxAllowed;
@@ -339,19 +384,37 @@ if(coins > available){
 coins = available;
 }
 
-document.getElementById("coinPrice").innerText = coins;
+const coinEl = document.getElementById("coinPrice");
+
+if(coinEl){
+    coinEl.innerText = coins;
+}
+
+let remaining = available - coins;
+const afterEl = document.getElementById("afterCoins");
+
+if(afterEl){
+    afterEl.innerText = remaining;
+}
 
 let coupon = Number(document.getElementById("couponPrice").innerText);
 
-let total = currentPrice - coupon - coins + 30;
+let base = Number(document.getElementById("shiftPrice").innerText || 0);
+
+let total = base - coupon - coins + 30;
 
 if(total < 0){
 total = 0;
 }
 
-document.getElementById("totalPrice").innerText = total;
+const totalEl = document.getElementById("totalPrice");
+
+if(totalEl){
+    totalEl.innerText = total;
+}
 
 }
+
 
 function checkSeat(){
 
@@ -366,7 +429,7 @@ openPackage();
 let purchaseProcessing = false;
 async function purchaseSeat(){
 
-
+console.log("PURCHASE BUTTON CLICKED");
  console.log("centreId:", localStorage.getItem("selectedCentreId"));
 console.log("shiftId:", localStorage.getItem("selectedShiftId"));
 console.log("studentId:", localStorage.getItem("studentId"));
@@ -376,28 +439,45 @@ const btn = document.querySelector(".purchase-btn");
 btn.disabled = true;
 const shiftId = localStorage.getItem("selectedShiftId");
 
+
 const res = await fetch("http://localhost:8087/api/shifts/" + shiftId);
 const shift = await res.json();
+console.log("SHIFT DATA:", shift);  
 
-let total = shift.price + 30;
+
+let coupon = Number(document.getElementById("couponPrice").innerText || 0);
+let coins = Number(document.getElementById("coinInput").value || 0);
+
+let total = currentPrice - coupon - coins + 30;
+
+if(total < 0){
+    total = 0;
+}
+
 
 const bookingData = {
     zone: localStorage.getItem("selectedZoneName"),
     centre: localStorage.getItem("selectedCentreName"),
     centreId: localStorage.getItem("selectedCentreId"),
-    shiftId: shiftId,
+
+    shiftId: localStorage.getItem("selectedShiftId"),
     seatId: localStorage.getItem("selectedSeatId"),
 
-    time: shift.name,
+    time: localStorage.getItem("selectedShiftName"),
     seat: localStorage.getItem("seatNumber"),
 
-    mrp: shift.mrp,
+    mrp: shift.mrp || shift.price,
     price: shift.price,
-    finalPrice: shift.price
+    finalPrice: total,
+
+    couponDiscount: coupon,
+    coinUsed: coins
+    
 };
+localStorage.setItem("coinUsed", coins);
 
 console.log("BOOKING DATA CREATED:", bookingData);
-
+localStorage.setItem("coinUsed", coins);
 localStorage.setItem("bookingData", JSON.stringify(bookingData));
 
 

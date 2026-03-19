@@ -13,17 +13,20 @@ public class PaymentCalculationService {
     private final CouponService couponService;
     private final CoinService coinService;
     private final BookingRepository bookingRepository;
+    private final com.coder_amit.repository.UserRepository userRepository;
 
     public PaymentCalculationService(
             ShiftRepository shiftRepository,
             CouponService couponService,
             CoinService coinService,
-            BookingRepository bookingRepository) {
+            BookingRepository bookingRepository,
+            com.coder_amit.repository.UserRepository userRepository) {
 
         this.shiftRepository = shiftRepository;
         this.couponService = couponService;
         this.coinService = coinService;
         this.bookingRepository = bookingRepository;
+        this.userRepository = userRepository;
     }
 
     public PaymentCalculation calculate(
@@ -47,12 +50,17 @@ public class PaymentCalculationService {
         // -------------------
         Double couponDiscount = 0.0;
 
+        String userType = userRepository.findById(userId)
+                .map(user -> user.getRole().name())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
         if (couponCode != null && !couponCode.isEmpty()) {
             couponDiscount = couponService.validateAndCalculateDiscount(
                     couponCode,
                     shiftPrice,
                     centreId,
-                    gender);
+                    gender,
+                    userType);
         }
 
         result.setCouponDiscount(couponDiscount);
@@ -84,9 +92,10 @@ public class PaymentCalculationService {
         result.setPriceAfterCoin(priceAfterCoin);
 
         // -------------------
-        // Admission Fee (temporary fixed)
+        // Admission Fee
         // -------------------
         Double admissionFee = shift.getSection().getCentre().getAdmissionFee();
+
         var bookings = bookingRepository.findLatestBooking(userId, centreId);
 
         if (!bookings.isEmpty()) {
@@ -101,11 +110,28 @@ public class PaymentCalculationService {
                 admissionFee = 0.0;
             }
         }
+
         result.setAdmissionFee(admissionFee);
 
         Double finalPrice = priceAfterCoin + admissionFee;
-        result.setFinalPrice(finalPrice);
 
+        // ⭐ Vendor commission handling
+        if (!bookings.isEmpty()) {
+
+            var booking = bookings.get(0);
+
+            if (booking.getVendorId() != null) {
+
+                Double vendorPayable = booking.getVendorPayable();
+
+                result.setVendorCommission(booking.getCommission());
+                result.setVendorPayable(vendorPayable);
+
+                finalPrice = vendorPayable + admissionFee;
+            }
+        }
+
+        result.setFinalPrice(finalPrice);
         return result;
     }
 }

@@ -3,7 +3,9 @@ package com.coder_amit.controller;
 import com.coder_amit.model.Coupon;
 import com.coder_amit.service.CouponService;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.http.ResponseEntity;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -36,12 +38,23 @@ public class CouponController {
     }
 
     @PostMapping("/validate")
-    public Double validateCoupon(
+    public ResponseEntity<?> validateCoupon(
             @RequestParam String code,
             @RequestParam Double price,
             @RequestParam Long centreId,
-            @RequestParam String gender) {
+            @RequestParam String gender,
+            @RequestParam String userType) {
 
-        return couponService.validateAndCalculateDiscount(code, price, centreId, gender);
+        try {
+            Double discount = couponService.validateAndCalculateDiscount(
+                    code, price, centreId, gender, userType);
+
+            return ResponseEntity.ok().body(
+                    java.util.Map.of("discount", discount));
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(
+                    java.util.Map.of("message", e.getMessage()));
+        }
     }
 }
