@@ -63,7 +63,7 @@ console.log("LOGIN FUNCTION STARTED");
 
     try{
 
-let response = await fetch("http://localhost:8087/api/auth/login",{
+let response = await fetch("http://89.116.34.84:8087/api/auth/login",{
     method:"POST",
     headers:{
         "Content-Type":"application/json"
@@ -81,42 +81,33 @@ console.log("RESPONSE:", data);
 if(response.ok){
 
     alert(data.message);
-if(
-  data.role === "ADMIN" ||
-  data.role === "SUB_ADMIN" ||
-  data.role === "CO_ADMIN" ||
-  data.role === "VENDOR"
-){
 
+    // 🔥 SAVE COMMON DATA
     localStorage.setItem("role", data.role);
-    localStorage.setItem("username", data.username);
     localStorage.setItem("userId", data.userId);
 
-    window.location.href="../admin-panel/index.html";
+    // 🔥 ADMIN + COADMIN → admin panel
+    if(
+      data.role === "ADMIN" ||
+      data.role === "SUB_ADMIN" ||
+      data.role === "CO_ADMIN"
+    ){
+        window.location.href="../admin-panel/index.html";
+    }
 
-}
-else if(data.role === "STUDENT"){
-    console.log("LOGIN DATA:", data); 
+    // 🔥 STUDENT + VENDOR → student panel
+    else{
+        if(data.role === "STUDENT"){
+            localStorage.setItem("studentId", data.userId);
+        }
 
-    localStorage.setItem("studentId", data.userId);
-    localStorage.setItem("role", data.role);
+        if(data.role === "VENDOR"){
+            localStorage.setItem("vendorId", data.userId);
+            localStorage.setItem("vendorName", data.fullname);
+        }
 
-    // 🔥 ADD THIS LINE
-    localStorage.setItem("student", JSON.stringify({
-        id: data.userId,
-        role: data.role
-    }));
-
-    window.location.href="index.html";
-}
-else if(data.role === "VENDOR"){
-
-    localStorage.setItem("vendorId", data.userId);
-    localStorage.setItem("vendorName", data.fullname);   // ⭐ add this
-    localStorage.setItem("role", data.role);
-
-    window.location.href="index.html";
-}
+        window.location.href="index.html";
+    }
 
 }
         else{

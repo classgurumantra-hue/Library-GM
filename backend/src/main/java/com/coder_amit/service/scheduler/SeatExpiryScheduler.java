@@ -1,4 +1,4 @@
-package com.coder_amit.scheduler;
+package com.coder_amit.service.scheduler;
 
 import com.coder_amit.model.Booking;
 import com.coder_amit.model.Seat;
